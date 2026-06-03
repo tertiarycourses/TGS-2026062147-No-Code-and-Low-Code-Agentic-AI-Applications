@@ -308,7 +308,7 @@
       <div class="logo">Q</div>
       <div>
         <h1>Qualcomm · Operations Mission Control</h1>
-        <p>Global Network &amp; Fab Telemetry</p>
+        <p>Machine &amp; Project Operations</p>
       </div>
     </div>
     <div class="status-pills">
@@ -319,59 +319,54 @@
   </header>
 
   <div class="grid">
-    <!-- LEFT: Workforce Overview (live from database) -->
+    <!-- LEFT: Machine Operations Overview (live from database) -->
     <div>
       <div class="section-head">
-        <h2 class="big">Workforce Overview</h2>
+        <h2 class="big">Machine Operations Overview</h2>
         <button type="button" id="sync-btn" class="sync-btn">⟳ Sync from Database</button>
       </div>
 
       <div class="kpis">
         <div class="kpi">
-          <div class="label">Total Staff</div>
-          <div class="value" id="kpi-total">—</div>
-          <div class="delta" id="kpi-total-sub">live from data table</div>
+          <div class="label">Total Machines</div>
+          <div class="value" id="kpi-machines">—</div>
+          <div class="delta" id="kpi-machines-sub">live from data table</div>
         </div>
         <div class="kpi">
-          <div class="label">Female</div>
-          <div class="value" id="kpi-female">—</div>
-          <div class="delta up" id="kpi-female-sub">—</div>
+          <div class="label">Total Projects</div>
+          <div class="value" id="kpi-projects">—</div>
+          <div class="delta" id="kpi-projects-sub">distinct</div>
         </div>
         <div class="kpi">
-          <div class="label">Male</div>
-          <div class="value" id="kpi-male">—</div>
-          <div class="delta" id="kpi-male-sub">—</div>
+          <div class="label">Total Setups</div>
+          <div class="value" id="kpi-setups">—</div>
+          <div class="delta" id="kpi-setups-sub">distinct</div>
         </div>
         <div class="kpi">
-          <div class="label">Departments</div>
-          <div class="value" id="kpi-dept">—</div>
-          <div class="delta" id="kpi-dept-sub">unique</div>
+          <div class="label">Total Locations</div>
+          <div class="value" id="kpi-locations">—</div>
+          <div class="delta" id="kpi-locations-sub">distinct</div>
         </div>
       </div>
 
-      <div class="panel" style="margin-bottom:18px;">
-        <h2>Gender Distribution</h2>
-        <div class="bars" id="bars-gender"><div class="empty">Click "Sync from Database" to load.</div></div>
+      <div class="two-col" style="margin-bottom:18px;">
+        <div class="panel">
+          <h2>Machines by Status</h2>
+          <div class="bars" id="bars-status"><div class="empty">Click "Sync from Database" to load.</div></div>
+        </div>
+        <div class="panel">
+          <h2>Machines by Project</h2>
+          <div class="bars" id="bars-project"><div class="empty">—</div></div>
+        </div>
       </div>
 
       <div class="two-col">
         <div class="panel">
-          <h2>Department / Role</h2>
-          <div class="bars" id="bars-dept"><div class="empty">—</div></div>
+          <h2>Machines by Setup</h2>
+          <div class="bars" id="bars-setup"><div class="empty">—</div></div>
         </div>
         <div class="panel">
-          <h2>Food Preference</h2>
-          <div class="bars" id="bars-food"><div class="empty">—</div></div>
-        </div>
-      </div>
-
-      <div class="two-col" style="margin-top:18px;">
-        <div class="panel">
-          <h2>Attending</h2>
-          <div class="bars" id="bars-attending"><div class="empty">—</div></div>
-        </div>
-        <div class="panel">
-          <h2>Location / Status</h2>
+          <h2>Machines by Location</h2>
           <div class="bars" id="bars-location"><div class="empty">—</div></div>
         </div>
       </div>
@@ -410,7 +405,7 @@
       </div>
 
       <div class="kb-upload" id="kb-upload">
-        <label><span class="kb-ico">📚</span> Upload SOP to Knowledge Base</label>
+        <label><span class="kb-ico">📚</span> Upload Document to Knowledge Base</label>
         <div class="dropzone" id="dropzone">
           <div class="dz-main">Drop a file here or <b>browse</b></div>
           <div class="dz-sub">PDF, Word (.docx), or .txt — added to the RAG vector store</div>
@@ -428,21 +423,21 @@
         <div class="kb-actions">
           <button type="button" class="kb-upload-btn" id="kb-upload-btn" disabled>⬆ Upload to Knowledge Base</button>
         </div>
-        <small class="kb-status" id="kb-status">Indexes your HR SOP document so the assistant can answer policy questions.</small>
+        <small class="kb-status" id="kb-status">Indexes your document into the vector store so the assistant can answer questions from it.</small>
       </div>
 
       <div class="messages" id="messages">
         <div class="msg bot">
           <div class="ic">🤖</div>
-          <div class="bubble">Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about telemetry, alerts, or trigger an operations workflow.</div>
+          <div class="bubble">Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about machines, projects, setups, status, or location — or trigger an operations workflow.</div>
         </div>
       </div>
 
       <div class="suggestions" id="suggestions">
-        <div class="chip">Show current alerts</div>
-        <div class="chip">Run daily yield report</div>
-        <div class="chip">Status of Austin Fab</div>
-        <div class="chip">Restart edge sync</div>
+        <div class="chip">Machines by project</div>
+        <div class="chip">Which machines are offline?</div>
+        <div class="chip">Machines at each location</div>
+        <div class="chip">List setups in production</div>
       </div>
 
       <form class="composer" id="composer" autocomplete="off">
@@ -611,7 +606,7 @@
   });
 
   // ---------- Session management & reset ----------
-  const WELCOME = "Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about telemetry, alerts, or trigger an operations workflow.";
+  const WELCOME = "Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about machines, projects, setups, status, or location — or trigger an operations workflow.";
   function newSession() { return "mc-" + Math.random().toString(36).slice(2) + Date.now().toString(36); }
   let currentSession = newSession();
 
@@ -680,7 +675,7 @@
     kbUploadBtn.disabled = true;
     kbBarTrack.classList.remove("show");
     kbBarFill.style.width = "0%";
-    setKbStatus("Indexes your HR SOP document so the assistant can answer policy questions.", "");
+    setKbStatus("Indexes your document into the vector store so the assistant can answer questions from it.", "");
   }
 
   // Upload webhook URL config (defaults to KB_DEFAULT_URL, editable + persisted)
@@ -740,8 +735,8 @@
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         kbBarFill.style.width = "100%";
-        setKbStatus("✅ “" + selectedFile.name + "” indexed. You can now ask the assistant about its policies.", "ok");
-        addMessage("📚 Uploaded “" + selectedFile.name + "” to the SOP knowledge base. Ask me about leave, MC, performance, PDPA, marketing, PR, or data privacy policies.", "bot");
+        setKbStatus("✅ “" + selectedFile.name + "” indexed. You can now ask the assistant about it.", "ok");
+        addMessage("📚 Uploaded “" + selectedFile.name + "” to the knowledge base. You can now ask me questions about its contents.", "bot");
         kbUploadBtn.disabled = true;
         kbFileInput.value = "";
         selectedFile = null;
@@ -763,13 +758,17 @@
   // ---------- Dashboard: pull live stats from the database ----------
   const syncBtn = document.getElementById("sync-btn");
 
+  const BAR_IDS = ["bars-status", "bars-project", "bars-setup", "bars-location"];
   const STATS_PROMPT =
-    "Query the employee data table and return ONLY a raw JSON object — no markdown, no code fences, " +
-    "no commentary. Count EVERY employee row. Use this exact shape, with the real column values as keys:\n" +
-    '{"totalStaff": <int>, "gender": {"<value>": <int>}, "departments": {"<value>": <int>}, ' +
-    '"food": {"<value>": <int>}, "locations": {"<value>": <int>}, "attending": {"<value>": <int>}}\n' +
-    "For attending, use the attendance column values (e.g. Yes / No). " +
-    "If a category is unavailable, use an empty object {}. Respond with the JSON object only.";
+    "Query the machines data table and return ONLY a raw JSON object — no markdown, no code fences, " +
+    "no commentary. The table columns are Machine, Project, Setup, Status, Location. " +
+    "Use this exact shape, with the real column values as keys:\n" +
+    '{"totalMachines": <int>, "totalProjects": <int>, "totalSetups": <int>, "totalLocations": <int>, ' +
+    '"byStatus": {"<value>": <int>}, "byProject": {"<value>": <int>}, "bySetup": {"<value>": <int>}, ' +
+    '"byLocation": {"<value>": <int>}}\n' +
+    "Count EVERY machine row, grouped by each column value. totalProjects, totalSetups and totalLocations " +
+    "are the counts of DISTINCT values in those columns. If a value is unavailable, use 0 or an empty " +
+    "object {}. Respond with the JSON object only.";
 
   // Pull the first balanced JSON object out of any text the agent returns
   function extractJSON(text) {
@@ -784,18 +783,7 @@
 
   function sum(obj) { return Object.values(obj || {}).reduce((a, b) => a + (Number(b) || 0), 0); }
 
-  // case-insensitive lookup of a gender bucket
-  function genderCount(g, kind) {
-    let n = 0;
-    for (const [k, v] of Object.entries(g || {})) {
-      const key = k.toLowerCase();
-      if (kind === "female" && key.includes("female")) n += Number(v) || 0;
-      if (kind === "male" && key.includes("male") && !key.includes("female")) n += Number(v) || 0;
-    }
-    return n;
-  }
-
-  function renderBars(containerId, obj, cls) {
+  function renderBars(containerId, obj, cls, colorMap) {
     const el = document.getElementById(containerId);
     const entries = Object.entries(obj || {}).filter(([, v]) => Number(v) >= 0);
     if (!entries.length) { el.innerHTML = '<div class="empty">No data.</div>'; return; }
@@ -805,7 +793,12 @@
       .sort((a, b) => b[1] - a[1])
       .map(([k, v], i) => {
         const pct = Math.round(((Number(v) || 0) / max) * 100);
-        const color = cls || palette[i % palette.length];
+        // per-key colour map (case-insensitive) > fixed class > rotating palette
+        let color = cls || palette[i % palette.length];
+        if (colorMap) {
+          const hit = Object.keys(colorMap).find(key => key.toLowerCase() === String(k).toLowerCase());
+          if (hit) color = colorMap[hit];
+        }
         return `<div class="bar-row"><span title="${k}">${k}</span>` +
                `<div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%"></div></div>` +
                `<span class="bar-val">${Number(v).toLocaleString()}</span></div>`;
@@ -813,40 +806,25 @@
   }
 
   function renderStats(stats) {
-    const gender = stats.gender || {};
-    const total = Number(stats.totalStaff) || sum(gender) || sum(stats.departments);
-    const fem = genderCount(gender, "female");
-    const mal = genderCount(gender, "male");
-    const pct = (n) => total ? Math.round((n / total) * 100) + "%" : "—";
+    const machines = Number(stats.totalMachines) || sum(stats.byStatus) || sum(stats.byProject);
+    const projects = Number(stats.totalProjects) || Object.keys(stats.byProject || {}).length;
+    const setups = Number(stats.totalSetups) || Object.keys(stats.bySetup || {}).length;
+    const locations = Number(stats.totalLocations) || Object.keys(stats.byLocation || {}).length;
 
-    document.getElementById("kpi-total").textContent = total ? total.toLocaleString() : "—";
-    document.getElementById("kpi-female").textContent = fem ? fem.toLocaleString() : "—";
-    document.getElementById("kpi-female-sub").textContent = fem ? pct(fem) + " of staff" : "—";
-    document.getElementById("kpi-male").textContent = mal ? mal.toLocaleString() : "—";
-    document.getElementById("kpi-male-sub").textContent = mal ? pct(mal) + " of staff" : "—";
-    document.getElementById("kpi-dept").textContent = Object.keys(stats.departments || {}).length || "—";
+    document.getElementById("kpi-machines").textContent = machines ? machines.toLocaleString() : "—";
+    document.getElementById("kpi-projects").textContent = projects ? projects.toLocaleString() : "—";
+    document.getElementById("kpi-setups").textContent = setups ? setups.toLocaleString() : "—";
+    document.getElementById("kpi-locations").textContent = locations ? locations.toLocaleString() : "—";
 
-    renderBars("bars-gender", gender, "");
-    renderBars("bars-dept", stats.departments, "g");
-    renderBars("bars-food", stats.food, "a");
-    renderBars("bars-location", stats.locations, "");
-    renderAttending(stats.attending);
-  }
-
-  // Attending: colour Yes=green, No=red
-  function renderAttending(obj) {
-    const el = document.getElementById("bars-attending");
-    const entries = Object.entries(obj || {});
-    if (!entries.length) { el.innerHTML = '<div class="empty">No data.</div>'; return; }
-    const max = Math.max(...entries.map(([, v]) => Number(v) || 0), 1);
-    el.innerHTML = entries.sort((a, b) => b[1] - a[1]).map(([k, v]) => {
-      const key = k.toLowerCase();
-      const color = key.startsWith("y") ? "g" : (key.startsWith("n") ? "r" : "");
-      const pct = Math.round(((Number(v) || 0) / max) * 100);
-      return `<div class="bar-row"><span>${k}</span>` +
-             `<div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%"></div></div>` +
-             `<span class="bar-val">${Number(v).toLocaleString()}</span></div>`;
-    }).join("");
+    // Status colours: online/running/active=green, offline/down/fault=red, maintenance/idle/setup=amber
+    renderBars("bars-status", stats.byStatus, null, {
+      Online: "g", Running: "g", Active: "g", Production: "g", Operational: "g",
+      Offline: "r", Down: "r", Fault: "r", Error: "r", Failed: "r",
+      Maintenance: "a", Idle: "a", Setup: "a", Standby: "a"
+    });
+    renderBars("bars-project", stats.byProject, "");
+    renderBars("bars-setup", stats.bySetup, "a");
+    renderBars("bars-location", stats.byLocation, "");
   }
 
   async function syncDashboard() {
@@ -860,7 +838,7 @@
     syncBtn.classList.add("loading");
     const original = syncBtn.textContent;
     syncBtn.textContent = "⟳ Syncing…";
-    ["bars-gender", "bars-dept", "bars-food", "bars-location", "bars-attending"].forEach(id => {
+    BAR_IDS.forEach(id => {
       document.getElementById(id).innerHTML = '<div class="empty">Loading from database…</div>';
     });
     try {
@@ -881,7 +859,7 @@
       const replyText = parseReply(data);
       const stats = extractJSON(typeof data === "object" && data && (data.reply || data.output) ? (data.reply || data.output) : replyText) || extractJSON(data);
       if (!stats) {
-        ["bars-gender", "bars-dept", "bars-food", "bars-location", "bars-attending"].forEach(id => {
+        BAR_IDS.forEach(id => {
           document.getElementById(id).innerHTML = '<div class="empty">Couldn\'t parse stats. Try again.</div>';
         });
         console.warn("Stats parse failed. Raw reply:", replyText);
@@ -889,7 +867,7 @@
       }
       renderStats(stats);
     } catch (err) {
-      ["bars-gender", "bars-dept", "bars-food", "bars-location", "bars-attending"].forEach(id => {
+      BAR_IDS.forEach(id => {
         document.getElementById(id).innerHTML = '<div class="empty">Sync failed — check the webhook.</div>';
       });
       console.error(err);

@@ -140,6 +140,35 @@
   .bar-fill.r { background: linear-gradient(90deg, #dc2626, #f87171); }
   .bar-val { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
 
+  /* ---------- Records table ---------- */
+  .table-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .table-filter {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 9px;
+    padding: 8px 11px; color: var(--text); font-size: 12.5px; font-family: var(--font);
+    outline: none; width: 200px; max-width: 50%;
+  }
+  .table-filter:focus { border-color: var(--accent); }
+  .table-wrap { max-height: 360px; overflow-y: auto; border-radius: 10px; border: 1px solid var(--line); }
+  .rec-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .rec-table thead th {
+    position: sticky; top: 0; background: var(--panel-2); color: var(--muted);
+    text-align: left; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    font-size: 10.5px; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  .rec-table tbody td { padding: 9px 12px; border-bottom: 1px solid rgba(28,39,56,0.5); }
+  .rec-table tbody tr:hover { background: rgba(59,130,246,0.06); }
+  .rec-table tbody tr:last-child td { border-bottom: none; }
+  .rec-table .mono { font-variant-numeric: tabular-nums; color: var(--text); font-weight: 600; }
+  .rec-table .desc { max-width: 280px; color: var(--muted); }
+  .pill-status {
+    display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 600;
+    background: rgba(125,138,160,0.15); color: var(--muted);
+  }
+  .pill-status.ok { background: rgba(52,211,153,0.15); color: var(--green); }
+  .pill-status.bad { background: rgba(248,113,113,0.15); color: var(--red); }
+  .pill-status.warn { background: rgba(251,191,36,0.15); color: var(--amber); }
+  .table-foot { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
   /* ---------- Activity feed ---------- */
   .feed { display: flex; flex-direction: column; gap: 11px; margin-top: 4px; max-height: 220px; overflow-y: auto; }
   .feed-item { display: flex; gap: 10px; font-size: 12.5px; align-items: flex-start; }
@@ -308,7 +337,7 @@
       <div class="logo">Q</div>
       <div>
         <h1>Qualcomm · Operations Mission Control</h1>
-        <p>Global Network &amp; Fab Telemetry</p>
+        <p>Asset Management Registry</p>
       </div>
     </div>
     <div class="status-pills">
@@ -319,61 +348,76 @@
   </header>
 
   <div class="grid">
-    <!-- LEFT: Workforce Overview (live from database) -->
+    <!-- LEFT: Asset Management Registry (live from database) -->
     <div>
       <div class="section-head">
-        <h2 class="big">Workforce Overview</h2>
+        <h2 class="big">Asset Management Registry</h2>
         <button type="button" id="sync-btn" class="sync-btn">⟳ Sync from Database</button>
       </div>
 
       <div class="kpis">
         <div class="kpi">
-          <div class="label">Total Staff</div>
+          <div class="label">Total Assets</div>
           <div class="value" id="kpi-total">—</div>
-          <div class="delta" id="kpi-total-sub">live from data table</div>
+          <div class="delta" id="kpi-total-sub">all records</div>
         </div>
         <div class="kpi">
-          <div class="label">Female</div>
-          <div class="value" id="kpi-female">—</div>
-          <div class="delta up" id="kpi-female-sub">—</div>
+          <div class="label">Total Value</div>
+          <div class="value up" id="kpi-value">—</div>
+          <div class="delta up" id="kpi-value-sub">purchase value</div>
         </div>
         <div class="kpi">
-          <div class="label">Male</div>
-          <div class="value" id="kpi-male">—</div>
-          <div class="delta" id="kpi-male-sub">—</div>
+          <div class="label">Categories</div>
+          <div class="value" id="kpi-categories">—</div>
+          <div class="delta" id="kpi-categories-sub">distinct</div>
         </div>
         <div class="kpi">
-          <div class="label">Departments</div>
-          <div class="value" id="kpi-dept">—</div>
-          <div class="delta" id="kpi-dept-sub">unique</div>
+          <div class="label">Locations</div>
+          <div class="value" id="kpi-locations">—</div>
+          <div class="delta" id="kpi-locations-sub">distinct</div>
         </div>
       </div>
 
-      <div class="panel" style="margin-bottom:18px;">
-        <h2>Gender Distribution</h2>
-        <div class="bars" id="bars-gender"><div class="empty">Click "Sync from Database" to load.</div></div>
-      </div>
-
-      <div class="two-col">
+      <div class="two-col" style="margin-bottom:18px;">
         <div class="panel">
-          <h2>Department / Role</h2>
-          <div class="bars" id="bars-dept"><div class="empty">—</div></div>
+          <h2>By Category</h2>
+          <div class="bars" id="bars-category"><div class="empty">Click "Sync from Database" to load.</div></div>
         </div>
         <div class="panel">
-          <h2>Food Preference</h2>
-          <div class="bars" id="bars-food"><div class="empty">—</div></div>
+          <h2>By Status</h2>
+          <div class="bars" id="bars-status"><div class="empty">—</div></div>
         </div>
       </div>
 
-      <div class="two-col" style="margin-top:18px;">
+      <div class="two-col" style="margin-bottom:18px;">
         <div class="panel">
-          <h2>Attending</h2>
-          <div class="bars" id="bars-attending"><div class="empty">—</div></div>
-        </div>
-        <div class="panel">
-          <h2>Location / Status</h2>
+          <h2>By Location</h2>
           <div class="bars" id="bars-location"><div class="empty">—</div></div>
         </div>
+        <div class="panel">
+          <h2>Value by Category</h2>
+          <div class="bars" id="bars-value"><div class="empty">—</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="table-head">
+          <h2 style="margin-bottom:0;">Asset Records</h2>
+          <input type="text" id="table-filter" class="table-filter" placeholder="Filter assets…" />
+        </div>
+        <div class="table-wrap">
+          <table class="rec-table">
+            <thead>
+              <tr>
+                <th>Asset ID</th><th>Asset Name</th><th>Category</th><th>Location</th><th>Value</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="rec-body">
+              <tr><td colspan="6" class="empty" style="text-align:center;">No records loaded yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-foot" id="rec-count"></div>
       </div>
     </div>
 
@@ -428,13 +472,13 @@
         <div class="kb-actions">
           <button type="button" class="kb-upload-btn" id="kb-upload-btn" disabled>⬆ Upload to Knowledge Base</button>
         </div>
-        <small class="kb-status" id="kb-status">Indexes your HR SOP document so the assistant can answer policy questions.</small>
+        <small class="kb-status" id="kb-status">Indexes your asset SOP document so the assistant can answer policy questions.</small>
       </div>
 
       <div class="messages" id="messages">
         <div class="msg bot">
           <div class="ic">🤖</div>
-          <div class="bubble">Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about telemetry, alerts, or trigger an operations workflow.</div>
+          <div class="bubble">Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about asset records, valuations, or trigger an operations workflow.</div>
         </div>
       </div>
 
@@ -611,7 +655,7 @@
   });
 
   // ---------- Session management & reset ----------
-  const WELCOME = "Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about telemetry, alerts, or trigger an operations workflow.";
+  const WELCOME = "Welcome to Qualcomm Mission Control. I'm wired into your n8n automation engine. Ask me about asset records, valuations, or trigger an operations workflow.";
   function newSession() { return "mc-" + Math.random().toString(36).slice(2) + Date.now().toString(36); }
   let currentSession = newSession();
 
@@ -680,7 +724,7 @@
     kbUploadBtn.disabled = true;
     kbBarTrack.classList.remove("show");
     kbBarFill.style.width = "0%";
-    setKbStatus("Indexes your HR SOP document so the assistant can answer policy questions.", "");
+    setKbStatus("Indexes your asset SOP document so the assistant can answer policy questions.", "");
   }
 
   // Upload webhook URL config (defaults to KB_DEFAULT_URL, editable + persisted)
@@ -741,7 +785,7 @@
       if (xhr.status >= 200 && xhr.status < 300) {
         kbBarFill.style.width = "100%";
         setKbStatus("✅ “" + selectedFile.name + "” indexed. You can now ask the assistant about its policies.", "ok");
-        addMessage("📚 Uploaded “" + selectedFile.name + "” to the SOP knowledge base. Ask me about leave, MC, performance, PDPA, marketing, PR, or data privacy policies.", "bot");
+        addMessage("📚 Uploaded “" + selectedFile.name + "” to the SOP knowledge base. Ask me about asset handling, procurement, disposal, maintenance, or data privacy policies.", "bot");
         kbUploadBtn.disabled = true;
         kbFileInput.value = "";
         selectedFile = null;
@@ -760,16 +804,16 @@
 
   kbUploadBtn.addEventListener("click", uploadFile);
 
-  // ---------- Dashboard: pull live stats from the database ----------
+  // ---------- Dashboard: pull live asset records from the database ----------
   const syncBtn = document.getElementById("sync-btn");
 
   const STATS_PROMPT =
-    "Query the employee data table and return ONLY a raw JSON object — no markdown, no code fences, " +
-    "no commentary. Count EVERY employee row. Use this exact shape, with the real column values as keys:\n" +
-    '{"totalStaff": <int>, "gender": {"<value>": <int>}, "departments": {"<value>": <int>}, ' +
-    '"food": {"<value>": <int>}, "locations": {"<value>": <int>}, "attending": {"<value>": <int>}}\n' +
-    "For attending, use the attendance column values (e.g. Yes / No). " +
-    "If a category is unavailable, use an empty object {}. Respond with the JSON object only.";
+    "Query the assets data table and return EVERY row. Respond with ONLY a raw JSON object — no markdown, " +
+    "no code fences, no commentary — using this exact shape:\n" +
+    '{"records": [{"assetId": "<string>", "assetName": "<string>", "category": "<string>", ' +
+    '"location": "<string>", "purchaseValue": <number>, "status": "<string>"}]}\n' +
+    "Each object in records is one asset row, with the actual column values for AssetID, AssetName, " +
+    "Category, Location, PurchaseValue (a number) and Status. Include all rows. Respond with the JSON object only.";
 
   // Pull the first balanced JSON object out of any text the agent returns
   function extractJSON(text) {
@@ -784,18 +828,7 @@
 
   function sum(obj) { return Object.values(obj || {}).reduce((a, b) => a + (Number(b) || 0), 0); }
 
-  // case-insensitive lookup of a gender bucket
-  function genderCount(g, kind) {
-    let n = 0;
-    for (const [k, v] of Object.entries(g || {})) {
-      const key = k.toLowerCase();
-      if (kind === "female" && key.includes("female")) n += Number(v) || 0;
-      if (kind === "male" && key.includes("male") && !key.includes("female")) n += Number(v) || 0;
-    }
-    return n;
-  }
-
-  function renderBars(containerId, obj, cls) {
+  function renderBars(containerId, obj, cls, colorMap) {
     const el = document.getElementById(containerId);
     const entries = Object.entries(obj || {}).filter(([, v]) => Number(v) >= 0);
     if (!entries.length) { el.innerHTML = '<div class="empty">No data.</div>'; return; }
@@ -805,48 +838,124 @@
       .sort((a, b) => b[1] - a[1])
       .map(([k, v], i) => {
         const pct = Math.round(((Number(v) || 0) / max) * 100);
-        const color = cls || palette[i % palette.length];
+        // per-key colour map (case-insensitive) > fixed class > rotating palette
+        let color = cls || palette[i % palette.length];
+        if (colorMap) {
+          const hit = Object.keys(colorMap).find(key => key.toLowerCase() === String(k).toLowerCase());
+          if (hit) color = colorMap[hit];
+        }
         return `<div class="bar-row"><span title="${k}">${k}</span>` +
                `<div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%"></div></div>` +
                `<span class="bar-val">${Number(v).toLocaleString()}</span></div>`;
       }).join("");
   }
 
-  function renderStats(stats) {
-    const gender = stats.gender || {};
-    const total = Number(stats.totalStaff) || sum(gender) || sum(stats.departments);
-    const fem = genderCount(gender, "female");
-    const mal = genderCount(gender, "male");
-    const pct = (n) => total ? Math.round((n / total) * 100) + "%" : "—";
-
-    document.getElementById("kpi-total").textContent = total ? total.toLocaleString() : "—";
-    document.getElementById("kpi-female").textContent = fem ? fem.toLocaleString() : "—";
-    document.getElementById("kpi-female-sub").textContent = fem ? pct(fem) + " of staff" : "—";
-    document.getElementById("kpi-male").textContent = mal ? mal.toLocaleString() : "—";
-    document.getElementById("kpi-male-sub").textContent = mal ? pct(mal) + " of staff" : "—";
-    document.getElementById("kpi-dept").textContent = Object.keys(stats.departments || {}).length || "—";
-
-    renderBars("bars-gender", gender, "");
-    renderBars("bars-dept", stats.departments, "g");
-    renderBars("bars-food", stats.food, "a");
-    renderBars("bars-location", stats.locations, "");
-    renderAttending(stats.attending);
+  // Asset status colour mapping for pills + bars
+  const STATUS_COLORS = { active: "g", "in use": "g", operational: "g", available: "g", deployed: "g", working: "g",
+    retired: "r", disposed: "r", broken: "r", faulty: "r", lost: "r", decommissioned: "r", "out of service": "r",
+    maintenance: "a", repair: "a", "under repair": "a", reserved: "a", pending: "a", idle: "a", storage: "a" };
+  function statusClass(s) {
+    return STATUS_COLORS[String(s || "").toLowerCase().trim()] || "";
   }
 
-  // Attending: colour Yes=green, No=red
-  function renderAttending(obj) {
-    const el = document.getElementById("bars-attending");
-    const entries = Object.entries(obj || {});
+  function fmtMoney(n) {
+    const v = Number(n) || 0;
+    if (v >= 1e6) return "$" + (v / 1e6).toFixed(2) + "M";
+    if (v >= 1e3) return "$" + (v / 1e3).toFixed(1) + "K";
+    return "$" + v.toLocaleString();
+  }
+
+  function countBy(records, key) {
+    const out = {};
+    for (const r of records) {
+      const v = (r[key] ?? "").toString().trim() || "—";
+      out[v] = (out[v] || 0) + 1;
+    }
+    return out;
+  }
+  function sumBy(records, groupKey, valueKey) {
+    const out = {};
+    for (const r of records) {
+      const g = (r[groupKey] ?? "").toString().trim() || "—";
+      out[g] = (out[g] || 0) + (Number(r[valueKey]) || 0);
+    }
+    return out;
+  }
+  function distinct(records, key) {
+    return new Set(records.map(r => (r[key] ?? "").toString().trim()).filter(Boolean)).size;
+  }
+
+  let allRecords = []; // cached for table filtering
+
+  function renderStats(stats) {
+    // Accept {records:[...]} or a bare array
+    allRecords = Array.isArray(stats) ? stats : (Array.isArray(stats.records) ? stats.records : []);
+    // normalise keys to the field names we expect
+    allRecords = allRecords.map(r => ({
+      assetId: r.assetId ?? r.AssetID ?? r["Asset ID"] ?? r.id ?? "",
+      assetName: r.assetName ?? r.AssetName ?? r["Asset Name"] ?? r.name ?? "",
+      category: r.category ?? r.Category ?? "",
+      location: r.location ?? r.Location ?? "",
+      purchaseValue: Number(r.purchaseValue ?? r.PurchaseValue ?? r["Purchase Value"] ?? r.value ?? 0) || 0,
+      status: r.status ?? r.Status ?? ""
+    }));
+
+    const total = allRecords.length;
+    const totalValue = allRecords.reduce((a, r) => a + (Number(r.purchaseValue) || 0), 0);
+
+    document.getElementById("kpi-total").textContent = total ? total.toLocaleString() : "—";
+    document.getElementById("kpi-value").textContent = total ? fmtMoney(totalValue) : "—";
+    document.getElementById("kpi-value-sub").textContent = total
+      ? "avg " + fmtMoney(totalValue / total) + " / asset" : "purchase value";
+    document.getElementById("kpi-categories").textContent = distinct(allRecords, "category") || "—";
+    document.getElementById("kpi-locations").textContent = distinct(allRecords, "location") || "—";
+
+    renderBars("bars-category", countBy(allRecords, "category"), "");
+    renderBars("bars-status", countBy(allRecords, "status"), null,
+      Object.fromEntries(Object.entries(STATUS_COLORS)));
+    renderBars("bars-location", countBy(allRecords, "location"), "");
+    // Value by category — sum of purchase value, formatted as money in the label
+    renderMoneyBars("bars-value", sumBy(allRecords, "category", "purchaseValue"));
+
+    renderTable(allRecords);
+  }
+
+  // Like renderBars but shows formatted money instead of a count
+  function renderMoneyBars(containerId, obj) {
+    const el = document.getElementById(containerId);
+    const entries = Object.entries(obj || {}).filter(([, v]) => Number(v) >= 0);
     if (!entries.length) { el.innerHTML = '<div class="empty">No data.</div>'; return; }
     const max = Math.max(...entries.map(([, v]) => Number(v) || 0), 1);
     el.innerHTML = entries.sort((a, b) => b[1] - a[1]).map(([k, v]) => {
-      const key = k.toLowerCase();
-      const color = key.startsWith("y") ? "g" : (key.startsWith("n") ? "r" : "");
       const pct = Math.round(((Number(v) || 0) / max) * 100);
-      return `<div class="bar-row"><span>${k}</span>` +
-             `<div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%"></div></div>` +
-             `<span class="bar-val">${Number(v).toLocaleString()}</span></div>`;
+      return `<div class="bar-row"><span title="${k}">${k}</span>` +
+             `<div class="bar-track"><div class="bar-fill g" style="width:${pct}%"></div></div>` +
+             `<span class="bar-val">${fmtMoney(v)}</span></div>`;
     }).join("");
+  }
+
+  function renderTable(records) {
+    const body = document.getElementById("rec-body");
+    if (!records.length) {
+      body.innerHTML = '<tr><td colspan="6" class="empty" style="text-align:center;">No records.</td></tr>';
+      document.getElementById("rec-count").textContent = "";
+      return;
+    }
+    const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    body.innerHTML = records.map(r => {
+      const st = statusClass(r.status);
+      const stPill = st === "g" ? "ok" : st === "r" ? "bad" : st === "a" ? "warn" : "";
+      return `<tr>
+        <td class="mono">${esc(r.assetId) || "—"}</td>
+        <td>${esc(r.assetName) || "—"}</td>
+        <td>${esc(r.category) || "—"}</td>
+        <td>${esc(r.location) || "—"}</td>
+        <td class="mono">${r.purchaseValue ? fmtMoney(r.purchaseValue) : "—"}</td>
+        <td>${r.status ? `<span class="pill-status ${stPill}">${esc(r.status)}</span>` : "—"}</td>
+      </tr>`;
+    }).join("");
+    document.getElementById("rec-count").textContent =
+      `Showing ${records.length} of ${allRecords.length} assets`;
   }
 
   async function syncDashboard() {
@@ -860,9 +969,11 @@
     syncBtn.classList.add("loading");
     const original = syncBtn.textContent;
     syncBtn.textContent = "⟳ Syncing…";
-    ["bars-gender", "bars-dept", "bars-food", "bars-location", "bars-attending"].forEach(id => {
+    ["bars-category", "bars-status", "bars-location", "bars-value"].forEach(id => {
       document.getElementById(id).innerHTML = '<div class="empty">Loading from database…</div>';
     });
+    document.getElementById("rec-body").innerHTML =
+      '<tr><td colspan="6" class="empty" style="text-align:center;">Loading asset records…</td></tr>';
     try {
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
@@ -881,15 +992,17 @@
       const replyText = parseReply(data);
       const stats = extractJSON(typeof data === "object" && data && (data.reply || data.output) ? (data.reply || data.output) : replyText) || extractJSON(data);
       if (!stats) {
-        ["bars-gender", "bars-dept", "bars-food", "bars-location", "bars-attending"].forEach(id => {
+        ["bars-category", "bars-status", "bars-location", "bars-value"].forEach(id => {
           document.getElementById(id).innerHTML = '<div class="empty">Couldn\'t parse stats. Try again.</div>';
         });
+        document.getElementById("rec-body").innerHTML =
+          '<tr><td colspan="6" class="empty" style="text-align:center;">Couldn\'t parse records. Try again.</td></tr>';
         console.warn("Stats parse failed. Raw reply:", replyText);
         return;
       }
       renderStats(stats);
     } catch (err) {
-      ["bars-gender", "bars-dept", "bars-food", "bars-location", "bars-attending"].forEach(id => {
+      ["bars-category", "bars-status", "bars-location", "bars-value"].forEach(id => {
         document.getElementById(id).innerHTML = '<div class="empty">Sync failed — check the webhook.</div>';
       });
       console.error(err);
@@ -901,6 +1014,17 @@
   }
 
   syncBtn.addEventListener("click", syncDashboard);
+
+  // Live filter the records table
+  document.getElementById("table-filter").addEventListener("input", (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    if (!q) { renderTable(allRecords); return; }
+    const filtered = allRecords.filter(r =>
+      [r.assetId, r.assetName, r.category, r.location, r.purchaseValue, r.status]
+        .some(v => String(v).toLowerCase().includes(q)));
+    renderTable(filtered);
+  });
+
   // Auto-sync once on load if a webhook is configured
   if (WEBHOOK_URL) syncDashboard();
 </script>
