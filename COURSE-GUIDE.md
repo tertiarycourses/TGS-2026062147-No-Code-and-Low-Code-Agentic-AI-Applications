@@ -665,8 +665,8 @@ flowchart LR
 ```
 
 **Get the sample docs** (upload them from the page in 5.7):
-- `Qualcomm-HR-SOP.docx` (7 HR policies) — from Activity 4, or `python3 activity4-rag/make_sop.py`. → upload on the **HR** target.
-- `Qualcomm-IT-Support-FAQ.docx` (13 IT FAQs) — `python3 activity5-multi-agents/make_it_faq.py`. → upload on the **IT** target.
+- `activity5-multi-agents/Qualcomm-HR-SOP.docx` (7 HR policies) → upload on the **HR** target. *(Regenerate with `python3 activity4-rag/make_sop.py` if needed.)*
+- `activity5-multi-agents/Qualcomm-IT-Support-FAQ.docx` (13 IT FAQs) → upload on the **IT** target. *(Regenerate with `python3 activity5-multi-agents/make_it_faq.py`.)*
 
 > **Memory key & persistence notes (important):**
 > - The **Simple Vector Store is in‑memory** — contents are **wiped on every n8n restart or re‑deploy**. After any restart, **re‑upload** both documents.

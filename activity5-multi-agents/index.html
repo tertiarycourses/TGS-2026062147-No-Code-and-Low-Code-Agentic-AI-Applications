@@ -423,7 +423,8 @@
 <script>
   // ---------- Webhook config ----------
   const STORAGE_KEY = "mc_webhook_url";
-  let WEBHOOK_URL = localStorage.getItem(STORAGE_KEY) || "";
+  const WEBHOOK_DEFAULT = "https://n8n.srv923061.hstgr.cloud/webhook/chatbot";
+  let WEBHOOK_URL = localStorage.getItem(STORAGE_KEY) || WEBHOOK_DEFAULT;
 
   const messages = document.getElementById("messages");
   const form = document.getElementById("composer");
