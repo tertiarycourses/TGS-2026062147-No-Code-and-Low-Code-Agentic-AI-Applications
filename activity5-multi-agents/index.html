@@ -201,6 +201,9 @@
   .kb-target-btn:hover { color: var(--text); }
   .kb-target-btn.hr.active { background: rgba(244,114,182,0.16); border-color: var(--pink); color: var(--pink); }
   .kb-target-btn.it.active { background: rgba(56,189,248,0.16); border-color: var(--accent-2); color: var(--accent-2); }
+  .kb-target-btn.done { border-color: var(--green); }
+  .kb-done { display: none; margin-left: 7px; color: var(--green); font-weight: 700; }
+  .kb-done.show { display: inline; }
   .dropzone { border: 1.5px dashed var(--line); border-radius: 10px; padding: 16px 12px; text-align: center; cursor: pointer; transition: 0.15s; background: var(--bg); }
   .dropzone:hover, .dropzone.drag { border-color: var(--accent); background: rgba(59,130,246,0.08); }
   .dropzone .dz-main { font-size: 12.5px; color: var(--text); }
@@ -378,8 +381,8 @@
       <div class="kb-upload" id="kb-upload">
         <label>📚 Upload to Knowledge Base</label>
         <div class="kb-target" id="kb-target">
-          <button type="button" class="kb-target-btn hr active" data-target="hr">🧑‍💼 HR SOP → “HR” store</button>
-          <button type="button" class="kb-target-btn it" data-target="it">🛠️ IT FAQ → “IT” store</button>
+          <button type="button" class="kb-target-btn hr active" data-target="hr">🧑‍💼 HR SOP → “HR” store<span class="kb-done" id="kb-done-hr">✓ uploaded</span></button>
+          <button type="button" class="kb-target-btn it" data-target="it">🛠️ IT FAQ → “IT” store<span class="kb-done" id="kb-done-it">✓ uploaded</span></button>
         </div>
         <div class="dropzone" id="dropzone">
           <div class="dz-main">Drop a file here or <b>browse</b></div>
@@ -546,7 +549,19 @@
   const KB_IT_DEFAULT = "https://n8n.srv923061.hstgr.cloud/webhook/upload-it";
   let KB_HR_URL = localStorage.getItem(KB_HR_KEY) || KB_HR_DEFAULT;
   let KB_IT_URL = localStorage.getItem(KB_IT_KEY) || KB_IT_DEFAULT;
+  const KB_DONE_HR = "mc_kb_hr_done", KB_DONE_IT = "mc_kb_it_done";
   let kbTarget = "hr"; // which store the next upload goes to
+
+  // Persistent green ✓ so users know a store is already indexed and needn't re-upload
+  function refreshKbDone() {
+    [["hr", KB_DONE_HR], ["it", KB_DONE_IT]].forEach(([t, k]) => {
+      const name = localStorage.getItem(k);
+      const badge = document.getElementById("kb-done-" + t);
+      const btn = document.querySelector(".kb-target-btn." + t);
+      if (name) { badge.classList.add("show"); badge.title = "Indexed: " + name; btn.classList.add("done"); }
+      else { badge.classList.remove("show"); btn.classList.remove("done"); }
+    });
+  }
 
   const kbHrUrlInput = document.getElementById("kb-hr-url-input");
   const kbHrUrlSave = document.getElementById("kb-hr-url-save");
@@ -610,6 +625,17 @@
     });
   });
 
+  // Click the green ✓ to clear it (e.g. after an n8n restart wipes the in-memory store)
+  ["hr", "it"].forEach(t => {
+    document.getElementById("kb-done-" + t).addEventListener("click", (e) => {
+      e.stopPropagation();
+      localStorage.removeItem(t === "hr" ? KB_DONE_HR : KB_DONE_IT);
+      refreshKbDone();
+      setKbStatus("Cleared the " + t.toUpperCase() + " upload mark — you can re-upload that document.", "");
+    });
+  });
+  refreshKbDone(); // restore ✓ marks from a previous session
+
   dropzone.addEventListener("click", () => kbFileInput.click());
   kbFileInput.addEventListener("change", (e) => pickFile(e.target.files[0]));
   kbClear.addEventListener("click", clearFile);
@@ -636,6 +662,8 @@
         kbBarFill.style.width = "100%";
         setKbStatus("✅ “" + selectedFile.name + "” indexed into the " + storeLabel + " knowledge base.", "ok");
         addMessage("📚 Uploaded “" + selectedFile.name + "” to the " + storeLabel + " knowledge base. Ask me about its " + (kbTarget === "hr" ? "HR policies." : "IT how-to steps."), "bot");
+        localStorage.setItem(kbTarget === "hr" ? KB_DONE_HR : KB_DONE_IT, selectedFile.name);
+        refreshKbDone();
         kbUploadBtn.disabled = true; kbFileInput.value = ""; selectedFile = null;
       } else { setKbStatus("⚠️ Upload failed (HTTP " + xhr.status + "). Make sure the " + storeLabel + " ingestion workflow is active.", "err"); kbUploadBtn.disabled = false; }
     };
