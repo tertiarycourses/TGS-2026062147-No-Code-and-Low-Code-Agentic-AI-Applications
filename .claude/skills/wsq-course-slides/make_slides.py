@@ -79,7 +79,7 @@ def cover():
     txt(s,Inches(0.9),Inches(4.65),Inches(12),Inches(1.4),
         [[("WSQ Course Code: TGS-2023035977",16,GREY,False)],
          [("Conducted by Tertiary Infotech Academy Pte Ltd  ·  UEN 201200696W",14,GREY,False)]],space=6)
-    txt(s,Inches(0.9),Inches(6.55),Inches(12),Inches(0.34),[[("© 2026 Tertiary Infotech Academy Pte Ltd. All rights reserved.  ·  www.tertiaryinfotech.com",10,GREY,False)]])
+    txt(s,Inches(0.9),Inches(6.55),Inches(12),Inches(0.34),[[("© 2026 Tertiary Infotech Academy Pte Ltd. All rights reserved.  ·  www.tertiarycourses.com.sg",10,GREY,False)]])
 def section(kicker,title,n,sub=""):
     s=slide(); rect(s,0,0,SW,SH,WHITE)
     rect(s,0,0,Inches(0.28),SH,BLUE)
@@ -522,7 +522,7 @@ txt(s,Inches(1.25),Inches(2.7),Inches(11),Inches(1.2),[[("Thank You!",48,INK,Tru
 txt(s,Inches(1.27),Inches(4.1),Inches(11.5),Inches(1.4),
  [[("Keep your local n8n running and keep building your own agents.",18,GREY,False)],
   [("Download all flows: github.com/tertiarycourses/TGS-2023035977-Agentic-AI-Automation-with-n8n",13,BLUE,True)],
-  [("Powered by Tertiary Infotech Academy Pte. Ltd.  ·  www.tertiaryinfotech.com",12,GREY,False)]],space=8)
+  [("Powered by Tertiary Infotech Academy Pte Ltd  ·  www.tertiarycourses.com.sg",12,GREY,False)]],space=8)
 footer(s)
 
 OUT="courseware/n8n-slides.pptx"

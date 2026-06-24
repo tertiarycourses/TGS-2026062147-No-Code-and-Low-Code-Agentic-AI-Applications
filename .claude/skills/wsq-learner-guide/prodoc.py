@@ -118,7 +118,7 @@ def add_page_numbers(doc, left_text=""):
         hp = sec.footer.add_paragraph() if False else p  # keep single centered line
     # brand strip
     sp = footer.add_paragraph(); sp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    sr = sp.add_run(COPYRIGHT + "  ·  www.tertiaryinfotech.com")
+    sr = sp.add_run(COPYRIGHT + "  ·  www.tertiarycourses.com.sg")
     sr.font.size = Pt(7.5); sr.font.color.rgb = GREY
 
 def enable_update_fields(doc):
