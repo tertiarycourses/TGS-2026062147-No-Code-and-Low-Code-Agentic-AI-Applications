@@ -1,5 +1,5 @@
 {
-  "name": "Activity 6 — Website Chatbot via Webhook (Investment Advisor)",
+  "name": "Activity 6 â Website Chatbot via Webhook (Investment Advisor)",
   "nodes": [
     {
       "parameters": {
@@ -10,8 +10,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -760,
-        -220
+        -768,
+        -224
       ],
       "id": "04014e4d-5ab0-4437-a47b-3fef0cfef2f8",
       "name": "Enquiry Webhook",
@@ -24,8 +24,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -520,
-        -220
+        -528,
+        -224
       ],
       "id": "5a6732c2-980f-4391-b612-7976dc5fd3cc",
       "name": "Format Enquiry"
@@ -40,8 +40,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        -280,
-        -220
+        -288,
+        -224
       ],
       "id": "b9760bd3-bd3c-4f88-bcb0-77e086448f45",
       "name": "Email Advisor",
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -40,
-        -220
+        -48,
+        -224
       ],
       "id": "a5d42fd9-e8be-40f5-95ca-54f684f6c5fb",
       "name": "Enquiry Response Body"
@@ -75,8 +75,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        200,
-        -220
+        208,
+        -224
       ],
       "id": "0b498cf4-e9b5-41cf-8b02-7cadc18dddf4",
       "name": "Respond to Enquiry"
@@ -91,8 +91,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -760,
-        260
+        -768,
+        272
       ],
       "id": "50568d1a-dd88-4b56-8da8-18d0f83a76e2",
       "name": "Chat Webhook",
@@ -105,8 +105,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -520,
-        260
+        -528,
+        272
       ],
       "id": "5464094c-e2de-4847-8899-69272221d511",
       "name": "Normalize Chat Message"
@@ -122,8 +122,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -280,
-        260
+        -288,
+        272
       ],
       "id": "0ff61230-d7bf-4637-9df0-2f7f3b0d3d0b",
       "name": "Investment Advisor AI"
@@ -142,15 +142,15 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -420,
-        500
+        -416,
+        512
       ],
       "id": "32d18469-e2e9-4c09-a221-24e8036f0f68",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "UIBPmijf4wS4ngHz",
-          "name": "OpenAI account 2"
+          "id": "vfsUjKjXo1Uy100E",
+          "name": "OpenAI account 5"
         }
       }
     },
@@ -162,8 +162,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -200,
-        500
+        -208,
+        512
       ],
       "id": "6f5dc0b4-4866-456e-ae31-251b883e0101",
       "name": "Website Chat Memory"
@@ -176,7 +176,7 @@
       "typeVersion": 2,
       "position": [
         80,
-        260
+        272
       ],
       "id": "13ff8c66-98e6-4e93-bc81-18955fc6a4b8",
       "name": "Chat Response Body"
@@ -191,7 +191,7 @@
       "typeVersion": 1.5,
       "position": [
         320,
-        260
+        272
       ],
       "id": "0bab4486-b314-4ee9-8eb1-9e138f38a631",
       "name": "Respond to Chat"
@@ -205,8 +205,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -900,
-        -360
+        -896,
+        -368
       ],
       "id": "015b3407-ba95-4303-90a3-ea78a1379669",
       "name": "Enquiry Note"
@@ -214,14 +214,14 @@
     {
       "parameters": {
         "content": "## Chatbot\nPOST requests read the JSON body, apply the investment compliance system prompt, call the AI model, and return { reply }.",
-        "height": 440,
+        "height": 536,
         "width": 1360
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -900,
-        120
+        -896,
+        128
       ],
       "id": "6bb27afb-3107-4c90-bfec-9db9395281b0",
       "name": "Chatbot Note"
@@ -345,12 +345,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "324ce491-39d6-411c-a17d-c0d247dc8008",
+  "versionId": "9857e727-5f2d-49dd-9b64-96d2c7f6803c",
   "meta": {
-    "templateCredsSetupCompleted": true,
     "instanceId": "dd9d815cb100cab73a9cd63cc3f30fd090e73e9edbdc09a51a025bdf1bf015af"
   },
   "nodeGroups": [],
-  "id": "4cf9819c50ad494d",
+  "id": "NnVVXOcCnOtMSLHg",
   "tags": []
 }
