@@ -3,23 +3,9 @@
   "nodes": [
     {
       "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.formTrigger",
-      "typeVersion": 2.6,
-      "position": [
-        -608,
-        144
-      ],
-      "id": "bfc3397d-8956-4056-a2ad-4e15bdaadc5d",
-      "name": "On form submission",
-      "webhookId": "da38d7bb-abc8-45b2-b4a5-f9cd98de1584"
-    },
-    {
-      "parameters": {
-        "sendTo": "angch@tertiaryinfotech.com",
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
         "subject": "New Enquiry",
-        "message": "=Hi <br> <br>\n\nThere is a new enquiry. Below is the info: <br> <br>\n\nName:{{ $json.Name }} <br>\nEmail:{{ $json.Email }} <br>\nTel:{{ $json.Tel }} <br>\nMessage:{{ $json.Message }} <br>\n\n <br>\nAdmin  <br>\nABC Pte Ltd",
+        "message": "=Hi <br> <br>\n\nThere is a new sign up. Below is the info: <br> <br>\n\nName:{{ $json.Name }} <br>\nEmail:{{ $json.Email }} <br>\nTel:{{ $json.Phone }} <br>\nMessage:{{ $json.Message }} <br>\n\n <br>\nAdmin  <br>\nABC Pte Ltd",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
@@ -28,9 +14,15 @@
         0,
         0
       ],
-      "id": "c6e05ae6-21ff-4233-bdb1-5dbf55a7e7f1",
+      "id": "d1c6abec-a76a-4e88-8f0b-a9671b3cc614",
       "name": "Send a message",
-      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570"
+      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7EvlUD3eF6caSWD2",
+          "name": "Gmail account"
+        }
+      }
     },
     {
       "parameters": {
@@ -44,7 +36,7 @@
           "conditions": [
             {
               "id": "96180c90-cf34-4201-a9ca-526042e2ce15",
-              "leftValue": "={{ $json['Are you interested to join the event?'] }}",
+              "leftValue": "={{ $json.Attending[0] }}",
               "rightValue": "Yes",
               "operator": {
                 "type": "string",
@@ -62,14 +54,14 @@
         -400,
         144
       ],
-      "id": "dca18224-ecc2-473e-9fbb-e49920c7150d",
+      "id": "cca414d1-459c-43ae-96d4-d41b3f794d84",
       "name": "If"
     },
     {
       "parameters": {
         "sendTo": "={{ $('On form submission').item.json.Email }}",
         "subject": "New Enquiry",
-        "message": "=Hi <{{ $('On form submission').item.json.Name }}br> <br>\n\nThanks for letting us that you will not joining. Hope to you in the next even.\n\n <br>\nAdmin  <br>\nABC Pte Ltd",
+        "message": "=Hi <{{ $('On form submission').item.json.Name }}br> <br>\n\nThanks for letting us that you will not joining. Hope to see you in the next event.\n\n <br>\nAdmin  <br>\nABC Pte Ltd",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
@@ -78,27 +70,32 @@
         -176,
         304
       ],
-      "id": "6d787c60-4a9f-4ef8-b4c8-36d7850ec328",
+      "id": "af19b139-ec87-4cd0-8cfd-eca7abef4ce5",
       "name": "Send a message1",
-      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570"
+      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7EvlUD3eF6caSWD2",
+          "name": "Gmail account"
+        }
+      }
     },
     {
       "parameters": {
         "dataTableId": {
           "__rl": true,
-          "value": "CvZ4zZMT30wgDNO0",
+          "value": "BqXUNSNcmtX3yf9o",
           "mode": "list",
           "cachedResultName": "Event",
-          "cachedResultUrl": "/projects/koXyebnPoyxlBtCG/datatables/CvZ4zZMT30wgDNO0"
+          "cachedResultUrl": "/projects/Rnys24pZ5SfBp9uW/datatables/BqXUNSNcmtX3yf9o"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Joining": true,
             "Name": "={{ $json.Name }}",
             "Email": "={{ $json.Email }}",
-            "Tel": "={{ $json.Tel }}",
-            "Message": "={{ $json.Message }}"
+            "Phone": "={{ $json.Phone }}",
+            "Attending": "={{ $json.Attending[0] }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -123,28 +120,18 @@
               "removed": false
             },
             {
-              "id": "Tel",
-              "displayName": "Tel",
+              "id": "Phone",
+              "displayName": "Phone",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "type": "number",
+              "type": "string",
               "readOnly": false,
               "removed": false
             },
             {
-              "id": "Joining",
-              "displayName": "Joining",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "boolean",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "Message",
-              "displayName": "Message",
+              "id": "Attending",
+              "displayName": "Attending",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -164,7 +151,7 @@
         -192,
         112
       ],
-      "id": "681cf92c-a96d-482f-954b-0354aef6714c",
+      "id": "72b52156-8aa4-4b7e-8837-4ebf3c55513d",
       "name": "Insert row"
     },
     {
@@ -180,9 +167,29 @@
         0,
         192
       ],
-      "id": "07f90dde-b927-422c-8131-41e04b7de83e",
+      "id": "7b5787c7-2206-467c-b56c-8eb416066997",
       "name": "Send a message2",
-      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570"
+      "webhookId": "03a340b8-7cae-4d9e-9bac-f89dd2a8b570",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7EvlUD3eF6caSWD2",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -656,
+        144
+      ],
+      "id": "46f715ca-7a8d-4bf2-abda-e5b4dda24cf2",
+      "name": "On form submission",
+      "webhookId": "73ad3792-2062-4d04-b78b-54ee41d50e4c"
     }
   ],
   "pinData": {},
@@ -220,18 +227,25 @@
           }
         ]
       ]
+    },
+    "On form submission": {
+      "main": [
+        []
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "d6f4b577-53d1-4a15-a015-3dab7586a47f",
+  "versionId": "be38fa5b-6435-4099-ba5d-10e7a0f301e0",
   "meta": {
-    "instanceId": "dd9d815cb100cab73a9cd63cc3f30fd090e73e9edbdc09a51a025bdf1bf015af"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d03c6bed3240b308b4de832c94327c52a87e08eced8e5ff6ba01d3ae6a3aa507"
   },
   "nodeGroups": [],
-  "id": "d63cc6d892584754",
+  "id": "S55hB8dLFPLoBGTO",
   "tags": []
 }
