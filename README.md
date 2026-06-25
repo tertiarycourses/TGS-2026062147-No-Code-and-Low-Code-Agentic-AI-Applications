@@ -22,11 +22,31 @@
 
 ---
 
-## Screenshot
+## Lab Activities
 
-> **Activity 7 — Finance Advisor**: a live stock-analysis dashboard (TradingView + Twelve Data) with a floating Telegram launcher to an AI day-trading agent. **Live demo:** <https://tertiarycourses.github.io/TGS-2023035977-Agentic-AI-Automation-with-n8n/>
+**Activity 1 — Flyer with QR Code** · Form Trigger → Gmail + QR code on an event flyer.
+![Activity 1](labs/activity1-flyer-form/Activity1-Flyer-Form.png)
 
-![Agentic AI Automation with n8n — Finance Advisor dashboard](screenshot.png)
+**Activity 2 — Capture Submissions in a Data Table** · Every form submission saved to an n8n Data Table alongside the email.
+![Activity 2](labs/activity2-data-table/Activity2-Data-Table.png)
+
+**Activity 3 — Conditional Response** · IF-node routing: "Yes" saves to Data Table (3a) / Google Sheets (3b), "No" sends a thank-you email.
+![Activity 3](labs/activity3-conditional/Activity3a-Conditional-Data-Table.png)
+
+**Activity 4 — Telegram AI Agent** · Telegram-triggered AI agent with memory (4a) + a Data Table tool for HR lookups (4b).
+![Activity 4](labs/activity4-telegram-agent/Activity4a-Telegram-Agent.png)
+
+**Activity 5 — RAG Telegram Agent** · Agent routes between a Vector Store knowledge base and a Data Table — two sources, one bot.
+![Activity 5](labs/activity5-rag/Activity5-RAG-Telegram.png)
+
+**Activity 6 — Website Chatbot via Webhook** · Investment Advisor site with an enquiry form and floating AI chatbot, both wired to one n8n webhook.
+![Activity 6](labs/activity6-investment-advisor/Activity6-Investment-Advisor.png)
+
+**Activity 7 — Finance API → Telegram (Day Trader)** · Pulls Twelve Data candles + NewsAPI headlines, then replies with a Buy/Sell/Hold call. Live demo: <https://tertiarycourses.github.io/TGS-2023035977-Agentic-AI-Automation-with-n8n/>
+![Activity 7](screenshot.png)
+
+**Activity 8 — Security & Guardrails** · Human-in-the-loop leave approval (8a) and pre/post guardrails around the AI agent (8b).
+![Activity 8](labs/activity8-guardrails/Activity8b-Guardrails.png)
 
 ---
 
