@@ -570,7 +570,8 @@ activity_block(dict(tag="ACT 6",title="Activity 6 — Website Chatbot via Webhoo
    "Re-select your OpenAI and Gmail credentials on the agent and email nodes.",
    "Review the compliance system instruction (no guaranteed returns, no personalised advice).",
    "Save, Activate, and copy the webhook Production URL.",
-   "Open index.html, click the gear, and paste your webhook URL; have learners present their site."],
+   "Paste the Production URL into script.js in the activity folder.",
+   "Open index.html from the activity folder."],
  test="On the website, send a chat message and submit the enquiry form; confirm the bot replies and the advisor gets the email."))
 brk("Tea Break","15 minutes",TEAL)
 
@@ -620,8 +621,11 @@ activity_block(dict(tag="ACT 7",title="Activity 7 — Finance API → Telegram (
    "Import Activity7-Finance-Advisor.json into n8n.",
    "Open candles1min → Query Parameters → find apikey → replace with your Twelve Data key.",
    "Repeat for candles15min and candles1hr — all three nodes need the same Twelve Data key.",
-   "Open the news node → Authentication: Generic Credential Type → Query Auth.",
-   "Credential → Create New; set Name = apiKey and Value = your NewsAPI key, then Save.",
+   "Open the news HTTP Request node.",
+   "Click Credential → Create New Credential.",
+   "Scroll to Query Parameters → find apikey.",
+   "Replace YOUR_NEWS_API_KEY with your NewsAPI key.",
+   "Back on the news node, make sure your new credential is selected.",
    "Re-select your OpenAI and Telegram credentials on the model and Telegram nodes.",
    "Review: Telegram Trigger → Extract Ticker → candles (1m/15m/1h) + news → AI Agent → reply.",
    "Save and toggle Active; optionally open index.html and paste your Twelve Data key + bot username."],
