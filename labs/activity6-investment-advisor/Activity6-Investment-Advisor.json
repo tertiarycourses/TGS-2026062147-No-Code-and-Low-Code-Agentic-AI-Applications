@@ -5,15 +5,17 @@
       "parameters": {
         "path": "12663502-ff47-45b6-9a8f-c67c083603d9",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -768,
-        -224
+        128,
+        144
       ],
-      "id": "04014e4d-5ab0-4437-a47b-3fef0cfef2f8",
+      "id": "fff43c41-4540-42c9-800e-01ca10ce3ed7",
       "name": "Enquiry Webhook",
       "webhookId": "12663502-ff47-45b6-9a8f-c67c083603d9"
     },
@@ -24,15 +26,15 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -528,
-        -224
+        368,
+        144
       ],
-      "id": "5a6732c2-980f-4391-b612-7976dc5fd3cc",
+      "id": "fb3a491b-c18c-46b1-89e7-493f8d64ae57",
       "name": "Format Enquiry"
     },
     {
       "parameters": {
-        "sendTo": "angch@tertiaryinfotech.com",
+        "sendTo": "={{ $('Enquiry Webhook').item.json.query.email }}",
         "subject": "={{ $json.emailSubject }}",
         "message": "={{ $json.emailMessage }}",
         "options": {}
@@ -40,16 +42,16 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        -288,
-        -224
+        608,
+        144
       ],
-      "id": "b9760bd3-bd3c-4f88-bcb0-77e086448f45",
+      "id": "03a1b469-9dc1-41a5-be1c-1743b8583bba",
       "name": "Email Advisor",
       "webhookId": "91113009-7adf-4193-a0f1-bede72287121",
       "credentials": {
         "gmailOAuth2": {
-          "id": "MTzer4MNXRwyE36l",
-          "name": "Gmail OAuth (Sales Account)"
+          "id": "xhglhOJK9h9Yy6Fg",
+          "name": "Gmail account"
         }
       }
     },
@@ -60,10 +62,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -48,
-        -224
+        848,
+        144
       ],
-      "id": "a5d42fd9-e8be-40f5-95ca-54f684f6c5fb",
+      "id": "5138b97e-27b3-4524-8204-ed991cc3497d",
       "name": "Enquiry Response Body"
     },
     {
@@ -75,10 +77,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        208,
-        -224
+        1104,
+        144
       ],
-      "id": "0b498cf4-e9b5-41cf-8b02-7cadc18dddf4",
+      "id": "0903c4fa-b3e6-4808-83c8-18fb4e96f314",
       "name": "Respond to Enquiry"
     },
     {
@@ -86,15 +88,17 @@
         "httpMethod": "POST",
         "path": "12663502-ff47-45b6-9a8f-c67c083603d9",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -768,
-        272
+        128,
+        640
       ],
-      "id": "50568d1a-dd88-4b56-8da8-18d0f83a76e2",
+      "id": "3120b723-068c-4c04-a1fc-c71f3f65b716",
       "name": "Chat Webhook",
       "webhookId": "12663502-ff47-45b6-9a8f-c67c083603d9"
     },
@@ -105,10 +109,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -528,
-        272
+        368,
+        640
       ],
-      "id": "5464094c-e2de-4847-8899-69272221d511",
+      "id": "0b90c456-b480-4748-a222-ffaa94e5be77",
       "name": "Normalize Chat Message"
     },
     {
@@ -122,10 +126,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -288,
-        272
+        608,
+        640
       ],
-      "id": "0ff61230-d7bf-4637-9df0-2f7f3b0d3d0b",
+      "id": "8f25b2df-0f87-4300-9464-68b31e5748a8",
       "name": "Investment Advisor AI"
     },
     {
@@ -142,15 +146,15 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -416,
-        512
+        480,
+        880
       ],
-      "id": "32d18469-e2e9-4c09-a221-24e8036f0f68",
+      "id": "a2b8241d-7304-47e7-8e97-83c52f1fb4c1",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "vfsUjKjXo1Uy100E",
-          "name": "OpenAI account 5"
+          "id": "HncP6z2nrPdrEcFY",
+          "name": "OpenAI account"
         }
       }
     },
@@ -162,10 +166,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -208,
-        512
+        688,
+        880
       ],
-      "id": "6f5dc0b4-4866-456e-ae31-251b883e0101",
+      "id": "67156c10-6ff1-47a7-9eb2-fc4dca44f11d",
       "name": "Website Chat Memory"
     },
     {
@@ -175,10 +179,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        80,
-        272
+        976,
+        640
       ],
-      "id": "13ff8c66-98e6-4e93-bc81-18955fc6a4b8",
+      "id": "e31d3bb5-d9c3-4b96-adb7-0376aca1cd81",
       "name": "Chat Response Body"
     },
     {
@@ -190,10 +194,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        320,
-        272
+        1216,
+        640
       ],
-      "id": "0bab4486-b314-4ee9-8eb1-9e138f38a631",
+      "id": "fed91bd0-c531-4eba-9831-d981b36fe165",
       "name": "Respond to Chat"
     },
     {
@@ -205,10 +209,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -896,
-        -368
+        0,
+        0
       ],
-      "id": "015b3407-ba95-4303-90a3-ea78a1379669",
+      "id": "10783a57-87c0-4090-90fa-d50d8916c5ec",
       "name": "Enquiry Note"
     },
     {
@@ -220,10 +224,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -896,
-        128
+        0,
+        496
       ],
-      "id": "6bb27afb-3107-4c90-bfec-9db9395281b0",
+      "id": "00d64a16-26dc-4f65-bacc-7ebd09c455d4",
       "name": "Chatbot Note"
     }
   ],
@@ -340,16 +344,18 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "9857e727-5f2d-49dd-9b64-96d2c7f6803c",
+  "versionId": "9063443a-3be3-471b-9409-0da1f7146d16",
   "meta": {
-    "instanceId": "dd9d815cb100cab73a9cd63cc3f30fd090e73e9edbdc09a51a025bdf1bf015af"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fcdd11be6122db515fd1e031acff4a3eeab5f077f43f29bb025528511f775668"
   },
   "nodeGroups": [],
-  "id": "NnVVXOcCnOtMSLHg",
+  "id": "w76yfcA3Um3gU1UR",
   "tags": []
 }

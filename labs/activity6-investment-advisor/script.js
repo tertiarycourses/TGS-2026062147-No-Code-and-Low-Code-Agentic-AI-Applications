@@ -1,5 +1,5 @@
 const WEBHOOK_URL =
-  "https://n8n.srv923061.hstgr.cloud/webhook/12663502-ff47-45b6-9a8f-c67c083603d9";
+  "INPUT YOUR WEBHOOK URL HERE";
 
 const enquiryForm = document.querySelector("#enquiryForm");
 const formStatus = document.querySelector("#formStatus");
@@ -41,6 +41,7 @@ enquiryForm.addEventListener("submit", async (event) => {
       method: "GET",
       headers: {
         Accept: "application/json",
+        "ngrok-skip-browser-warning": "true",
       },
     });
 
