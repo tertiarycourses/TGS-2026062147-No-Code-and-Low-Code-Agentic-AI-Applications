@@ -165,7 +165,7 @@ def step_slide(kicker,act_title,n,total,text):
     oval(s,Inches(0.85),Inches(2.6),Inches(1.5),Inches(1.5),TEAL)
     txt(s,Inches(0.85),Inches(2.86),Inches(1.5),Inches(1.0),[[(str(n),40,WHITE,True)]],align=PP_ALIGN.CENTER)
     txt(s,Inches(0.95),Inches(1.95),Inches(11),Inches(0.4),[[(f"STEP {n} OF {total}",13,GREY,True)]])
-    txt(s,Inches(2.7),Inches(2.7),Inches(10.0),Inches(3.2),[[(text,24,INK,False)]],anchor=MSO_ANCHOR.MIDDLE); footer(s); return s
+    txt(s,Inches(2.7),Inches(2.6),Inches(10.0),Inches(1.5),[[(text,24,INK,False)]],anchor=MSO_ANCHOR.MIDDLE); footer(s); return s
 def test_slide(act_title,text,kicker):
     s=slide(); head(s,act_title,kicker,TEAL)
     rect(s,Inches(0.85),Inches(2.3),Inches(11.7),Inches(2.6),RGBColor(0xE8,0xF7,0xEE))
