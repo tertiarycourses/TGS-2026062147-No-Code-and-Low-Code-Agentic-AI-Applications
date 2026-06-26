@@ -293,6 +293,9 @@ content("The n8n Editor",[
  "Node panel — search 400+ nodes by name.",
  "Execute Workflow — run and inspect data at each step.",
  "Each node shows input and output data as JSON."],kicker="UI TOUR")
+img_slide("The n8n Editor",IMG("courseware/assets/n8n-editor.png"),
+ "n8n canvas: left sidebar navigation · centre canvas · node toolbar · Editor / Executions / Evaluations tabs",
+ kicker="UI TOUR")
 two_col("n8n Nodes",[
  ("Trigger nodes — start a workflow",0),("Form, Webhook, Telegram, Schedule, Manual",1),
  ("Action nodes — do something",0),("Gmail, Google Sheets, HTTP Request, Data Table",1)],
@@ -309,6 +312,9 @@ two_col("Triggers Available in n8n",[
  ("Email (IMAP) - on new email",0),
  ("App triggers - Gmail, Sheets, Notion, ...",0)],
  kicker="WHEN A WORKFLOW RUNS",lhead="Core triggers",rhead="Chat & app triggers")
+img_slide("Triggers Available in n8n",IMG("courseware/assets/n8n-triggers.png"),
+ "n8n trigger nodes: Manual · Schedule · WhatsApp · Telegram · Gmail · Chat · Form · Webhook",
+ kicker="WHEN A WORKFLOW RUNS")
 two_col("Key Nodes in n8n",[
  ("HTTP Request - call any API",0),
  ("Gmail / Outlook - send email",0),
@@ -321,6 +327,9 @@ two_col("Key Nodes in n8n",[
  ("Vector Store - RAG retrieval",0),
  ("Respond to Webhook - reply to caller",0)],
  kicker="THE WORKHORSE NODES",lhead="Actions",rhead="Logic & AI")
+img_slide("Key Nodes in n8n",IMG("courseware/assets/n8n-key-nodes.png"),
+ "If · Switch · Filter · Edit Fields · Split Out · Aggregate · Merge · Loop · Date & Time · Execute Workflow · Wait · Code",
+ kicker="THE WORKHORSE NODES")
 content("Triggers and Actions",[
  "A Trigger is the first node — it decides WHEN a workflow runs.",
  "Manual & Schedule triggers for testing and time-based jobs.",
@@ -348,6 +357,9 @@ content("Pin Data & Execution History",[
  "Pin data to freeze a node's output while you build downstream nodes.",
  "Edit output to test different scenarios without re-running triggers.",
  "Execution History shows every run, its data, and any errors."],kicker="DEBUGGING")
+img_slide("Pin Data & Execution History",IMG("courseware/assets/n8n-execution-history.png"),
+ "Execution History tab — each run shows status, duration, ID and the full data at every node",
+ kicker="DEBUGGING")
 content("Transforming Data",[
  "Edit Fields (Set) — add, rename or reshape fields.",
  "Code node — run JavaScript/Python for custom logic.",
@@ -498,6 +510,9 @@ content("What is a Webhook?",[
  "A Webhook is a URL that external systems call to trigger your workflow.",
  "Use cases: website chat, form submissions, payments, app notifications.",
  "Pair the Webhook trigger with a Respond to Webhook node to reply."],kicker="CONCEPT")
+img_slide("What is a Webhook?",IMG("courseware/assets/n8n-webhook.png"),
+ "Webhook node starts the workflow when called · Respond to Webhook node returns data back to the caller",
+ kicker="CONCEPT")
 content("How a Webhook Works",[
  "1. You activate an n8n Webhook node - it gives you a unique URL.",
  "2. An external system (website, app, Telegram) sends an HTTP request to that URL.",
@@ -570,6 +585,9 @@ content("HTTP Request Node",[
  "Configure method, URL, headers and query parameters.",
  "Store API keys in credentials, never hard-coded.",
  "Parse the JSON response and pass fields to the next node."],kicker="IN n8n")
+img_slide("HTTP Request Node",IMG("courseware/assets/n8n-http-request.png"),
+ "HTTP Request node — makes an HTTP request and returns the response data",
+ kicker="IN n8n")
 K5="TOPIC 4 · API & HTTP"
 website_slide("Twelve Data",IMG("courseware/assets/site-twelvedata.png"),
  ["Twelve Data provides live stock / forex / crypto market data.","Sign up (free Basic plan), then Account -> API Keys.","Paste the apikey into the 3 'candles' HTTP nodes."],kicker="MARKET DATA API")
