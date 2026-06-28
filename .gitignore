@@ -28,3 +28,6 @@ reference flows/
 # Office lock/owner temp files
 ~$*
 .~lock.*
+
+# Claude Code agent config (local)
+.agents/
