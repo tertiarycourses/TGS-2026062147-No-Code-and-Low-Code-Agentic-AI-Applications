@@ -31,3 +31,7 @@ reference flows/
 
 # Claude Code agent config (local)
 .agents/
+
+# Python cache
+__pycache__/
+*.pyc

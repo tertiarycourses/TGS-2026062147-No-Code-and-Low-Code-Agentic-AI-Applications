@@ -22,6 +22,10 @@ LP_VERSIONS = [
                              "Activity 6, RAG → Activity 7; updated Activity 8 to the integrated HR Service Portal "
                              "(Leave Approval, Dashboard Data, AI Chatbot with Guardrails)",
      "Tertiary Infotech Academy Pte Ltd"),
+    ("3.0", "1 July 2026", "Replaced Activity 7 with two new RAG labs — Activity 7a (RAG chatbot: web PDF upload "
+                            "→ vector store → Telegram Q&A) and Activity 7b (customer-support RAG agent across "
+                            "three vector databases: Supabase, Pinecone, Qdrant)",
+     "Tertiary Infotech Academy Pte Ltd"),
 ]
 
 BRAND = RGBColor(0x1F, 0x6F, 0xEB)
@@ -62,7 +66,7 @@ def add_heading(text, size=15, color=BRAND, space_before=12, space_after=6):
 
 # ============================ COVER + FRONT MATTER ============================
 prodoc.style_headings(doc)
-prodoc.add_cover_page(doc, "LESSON PLAN", "Agentic AI Automation with n8n", "2.0",
+prodoc.add_cover_page(doc, "LESSON PLAN", "Agentic AI Automation with n8n", "3.0",
     org_logo=os.path.join(REPO_DIR,"courseware/assets/tertiary-infotech-logo.png"),
     course_logo=os.path.join(REPO_DIR,"courseware/assets/n8n-course-logo.png"))
 prodoc.add_version_control(doc, LP_VERSIONS)
@@ -200,8 +204,8 @@ schedule_table([
     ("3:20 – 4:00",  "Overview of Retrieval-Augmented Generation (RAG) — Tokenization, Embeddings, Vector Stores", 40, "normal"),
     ("4:00 – 4:15",  "Tea Break", 15, "break"),
     ("4:15 – 6:30",  "Topic 5: Retrieval-Augmented Generation (RAG)", None, "topic"),
-    ("4:15 – 4:45",  "Generate mock documents with Claude Code (e.g. employee-benefits FAQ, IT support FAQ, product info)", 30, "normal"),
-    ("4:45 – 6:05",  "Activity 7: Add RAG to the Telegram agent — route between RAG vector store and Data Table via the system instruction.  Extension — Activity 7b: RAG with Pinecone (persistent cloud vector database)", 80, "normal"),
+    ("4:15 – 4:45",  "RAG ingestion walkthrough — the upload → embed → vector-store → retrieve loop; set up OpenAI / Gemini embedding credentials", 30, "normal"),
+    ("4:45 – 6:05",  "Activity 7a: RAG chatbot — upload an IT-Support FAQ PDF from a web page into a vector store, then ask the Telegram bot (Gemini embeddings + knowledge_base tool).  Activity 7b: customer-support RAG agent for a training center, ingesting 20 course brochures across three vector databases (Supabase pgvector, Pinecone, Qdrant) answering via a website chat widget", 80, "normal"),
     ("6:05 – 6:30",  "Day 2 recap, Q&A and wrap-up", 25, "normal"),
 ])
 
@@ -263,7 +267,7 @@ doc.add_paragraph(
 prodoc.add_page_numbers(doc)
 prodoc.enable_update_fields(doc)
 
-OUT = os.path.join(REPO_DIR, "courseware/Lesson Plan - Agentic AI Automation with n8n.docx")
+OUT = os.path.join(REPO_DIR, "courseware/LP-Agentic AI Automation with n8n.docx")
 doc.save(OUT)
 print("Saved:", OUT)
 

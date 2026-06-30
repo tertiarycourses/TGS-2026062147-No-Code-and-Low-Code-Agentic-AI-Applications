@@ -60,7 +60,7 @@ p("Work through the activities in order: each one builds on the skills (and some
 
 note("Course flow at a glance — "
      "Day 1: Workflow Automation (Activities 1-3) + AI Agents (Activity 4). "
-     "Day 2: Webhooks (Activity 5) · APIs (Activity 6) · RAG (Activity 7). "
+     "Day 2: Webhooks (Activity 5) · APIs (Activity 6) · RAG (Activities 7a, 7b). "
      "Day 3: Security & Guardrails (Activity 8) + Mini Capstone.")
 
 # ---------------------------------------------------------------- 0. Setup
@@ -315,6 +315,7 @@ steps([
     "Paste the Production URL into `script.js` in the activity folder.",
     "Open `index.html` from the activity folder.",
 ])
+B.append(("img","labs/activity5-investment-advisor/Activity5-website.png","The Investment Advisor website — enquiry form + floating 'Ask Advisor' chatbot, both posting to one n8n webhook"))
 note("Get a few learners to present their live website and chatbot.")
 B.append(("test", "On the website, send a chat message and submit the enquiry form; confirm the bot replies and the advisor receives the enquiry email."))
 
@@ -383,6 +384,7 @@ steps([
     "**Save** the workflow and toggle it **Active**.",
     "*(Optional)* open `index.html`, click the gear, and paste your Twelve Data key + Telegram bot username for the dashboard.",
 ])
+B.append(("img","labs/activity6-finance-advisor/Activity6-website.png","The Stock Analysis dashboard — live TradingView chart, Twelve Data quote stats, and a Telegram chat widget for the AI day-trading agent"))
 B.append(("test", "Message the bot \"Should I buy AAPL?\" and confirm it returns a recommendation with reasoning. "
                   "If you get a 401/429 from an HTTP node, re-check the corresponding API key (401 = wrong key, 429 = rate limit)."))
 
@@ -391,11 +393,12 @@ topic("Topic 5: Retrieval-Augmented Generation (RAG)")
 p("**Day 2 afternoon (second half).** Extend the Telegram agent with document knowledge. RAG lets the agent "
   "answer questions from PDFs and Word documents by retrieving the most relevant chunks at query time.")
 
-act("Activity 7 — Add RAG to the Telegram Agent (Two Knowledge Sources)")
-p("**Folder:** `labs/activity7-rag/`")
+act("Activity 7a — RAG Chatbot: Upload a PDF, Ask in Telegram")
+p("**Folder:** `labs/activity7-rag/`  ·  workflow `Activity7a-RAG-Telegram.json`  ·  uploader `Activity7a-upload.html`  ·  sample doc `it-faq.pdf`")
 h3("Goal")
-p("Upgrade the agent with **Retrieval-Augmented Generation (RAG)** so it can answer from **documents** (policy "
-  "PDFs/FAQs) as well as the **Data Table**. The agent must route to the **right source** for each question.")
+p("Build the **complete RAG loop** with no-code blocks. A single web page extracts the text from a **PDF** (an "
+  "IT-Support FAQ) and uploads it to n8n, which **embeds** it into a **vector store**. A **Telegram** bot then "
+  "answers questions using **only** that document — the foundation of every RAG assistant.")
 h3("Concepts — RAG in one minute")
 bullets([
     "**Tokenization** — text is split into tokens the model can process.",
@@ -404,66 +407,110 @@ bullets([
 ])
 B.append(("img", "courseware/assets/rag-flow.png",
           "How RAG works — User → Prompt → Data Retrieval (search/retrieve over your data sources) → Generator → Response"))
-h3("Step-by-step")
+B.append(("img","labs/activity7-rag/Activity7a-RAG-Telegram.png","Activity 7a workflow — PDF ingestion path (Upload Webhook → Gemini Embeddings → Simple Vector Store) and Telegram chat path (AI Agent + knowledge_base tool)"))
+h3("Step 1 — Import the workflow and connect credentials")
 steps([
-    "Prepare knowledge documents. Use the provided `MyCompany-HR-SOP.docx` and `MyCompany-IT-Support-FAQ.docx`, "
-    "or generate fresh ones with Claude Code (e.g. an employee-benefits FAQ or product info).",
-    "Build the **ingestion** path: an upload point → **Embeddings (OpenAI)** → **Vector Store (Insert)** with a "
-    "**Default Data Loader** so your documents are embedded and stored.",
-    "In your Telegram agent, add a **Vector Store** retrieval **tool** (the RAG source) alongside the existing "
-    "**Data Table** tool — the agent now has **two** data sources.",
-    "Rewrite the **System Instruction** to route correctly: \"Use the **Knowledge Base** tool for policy/FAQ "
-    "questions and the **Employees** tool for staff-record questions. Never mix the two.\"",
-    "**Save** and keep **Active**.",
+    "In n8n, **Workflows → Import from File** and select `Activity7a-RAG-Telegram.json`. It has two halves: a "
+    "PDF-ingestion path and a Telegram chat path.",
+    "Add your **Google Gemini** credential to the three Gemini nodes (the Chat Model and **both** Embeddings nodes).",
+    "Add your **Telegram** credential to the **Telegram Trigger** and the **Send a text message** node.",
+    "**Activate** the workflow, then copy the **Upload Webhook** production URL (it ends in `/webhook/rag-upload`).",
 ])
-note("Get a few learners to present their chatbot and show it answering both a policy question (RAG) and a "
-     "staff-record question (Data Table).")
-B.append(("test", "Ask a policy question (\"How many days of annual leave do I get?\") and a record question "
-                  "(\"What is Alice's role?\") and confirm each is answered from the correct source."))
+h3("Step 2 — Upload the IT-Support FAQ (the web uploader)")
+steps([
+    "Open `Activity7a-upload.html` in a browser (or serve it: `python3 -m http.server 8099`).",
+    "Paste the **rag-upload** webhook URL into the page and click **Test**.",
+    "Drop **`it-faq.pdf`** onto the page and click **Send to Vector Store**. The page extracts the PDF text "
+    "in the browser with PDF.js and POSTs it to n8n.",
+    "n8n chunks the text, embeds it with **Gemini**, and inserts it into the **Simple Vector Store** "
+    "(`clearStore: true`, so each upload replaces the previous document).",
+])
+B.append(("img","labs/activity7-rag/Activity7a-website.png","The single-page uploader — paste your webhook URL, drop a PDF, send the extracted text to the vector store"))
+h3("Step 3 — Chat with your document in Telegram")
+steps([
+    "Message your Telegram bot, e.g. *\"How do I reset my password?\"*",
+    "The **AI Agent** calls the **knowledge_base** retrieve-as-tool, fetches the closest chunks, and answers "
+    "**only** from the uploaded document.",
+    "If nothing relevant is found, it replies *\"I couldn't find that in the uploaded documents.\"*",
+])
+note("The vector store is **in-memory** — simple for a demo, but it resets when the workflow restarts. "
+     "Activity 7b swaps it for a **persistent vector database**.")
+B.append(("test","Ask the bot a question answerable only from `it-faq.pdf` — it answers from the document. Ask "
+                 "an off-topic question — it replies that it couldn't find that in the uploaded documents."))
 
-act("Activity 7b — RAG with Pinecone (Persistent Vector Database)")
-p("**Folder:** `labs/activity7-rag/`  ·  workflows `Activity7b-Pinecone-Upload.json` (ingest) + `Activity7b-Pinecone-RAG.json` (chat)")
+act("Activity 7b — Customer-Support RAG Agent (Cook & Bake Academy)")
+p("**Folder:** `labs/activity7-rag/`  ·  ingestion `Activity7b-Supabase-Upload.json` / `Activity7b-Pinecone-Upload.json` / "
+  "`Activity7b-Qdrant-Upload.json`  ·  answering agent `Activity7b-CX-Agent.json`  ·  brochures `brochures/`  ·  website `website/`")
 h3("Goal")
-p("Activity 7 used an **in-memory** vector store that resets when the workflow restarts. Here you swap it for "
-  "**Pinecone**, a managed cloud **vector database**, so your knowledge base **persists** and scales. You upload "
-  "documents into a Pinecone index once, then the Telegram agent answers from it.")
-B.append(("img","labs/activity7-rag/Activity7b-Pinecone-RAG.png","Activity 7b workflow — Telegram agent answering from a Pinecone vector store (gpt-4.1-mini)"))
-h3("Why a vector database (Pinecone)?")
+p("A cooking & bakery training center (**Cook & Bake Academy**) has a website **support chatbot**. You ingest "
+  "**20 course brochures** from Google Drive into a **vector database**, then a **CX Agent** answers visitor "
+  "questions about course **duration, fees, location and schedule** — grounded in the brochures. You will try "
+  "**three** vector databases — **Supabase (pgvector)**, **Pinecone** and **Qdrant** — and see that the RAG "
+  "flow is identical; only the store changes.")
+B.append(("img","labs/activity7-rag/Activity7b-CX-Agent.png","Activity 7b CX Agent — website webhook → retrieve from the vector store → respond to the chat widget"))
+h3("Why a real vector database?")
 bullets([
-    "An **in-memory** store is fine for a demo but is lost on restart.",
-    "**Pinecone** stores your embeddings in the cloud — persistent, fast, scales to millions of vectors.",
-    "Same RAG idea: embed documents once, then retrieve the closest chunks for each question.",
+    "An **in-memory** store (Activity 7a) is lost on restart; a **vector database** persists and scales.",
+    "**Supabase (pgvector)** — Postgres + a vector extension; great if you already use Postgres.",
+    "**Pinecone** — fully-managed SaaS; just create an index, zero-ops.",
+    "**Qdrant** — open-source; run it via Docker or use Qdrant Cloud for full control.",
 ])
-h3("Step 1 — Create a Pinecone account")
+note("All three stores use OpenAI **`text-embedding-3-small` (1536 dimensions)**. The table/index/collection "
+     "dimension **must** equal 1536 or inserts will fail. Change the embedding model and the dimension changes too.")
+h3("Step 1 — Upload the brochures to Google Drive")
 steps([
-    "Open https://www.pinecone.io/ and click **Sign Up** (the free **Starter** tier is enough for this lab).",
-    "Register with your email (or Google/GitHub) and verify the account.",
-    "You land in the **Pinecone console** at https://app.pinecone.io.",
+    "In Google Drive, create a folder named **`Course Brochures`**.",
+    "Upload all **20** `.txt` files from `labs/activity7-rag/brochures/` (10 bakery + 10 cooking).",
+    "Open the folder and copy its **folder ID** from the URL "
+    "(`drive.google.com/drive/folders/<FOLDER_ID>`). You'll paste it into the **List Brochures in Folder** node.",
 ])
-B.append(("img","courseware/assets/site-pinecone.png","Pinecone — the managed vector database; sign up for the free Starter tier"))
-h3("Step 2 — Create an API key and an index")
+h3("Step 2 — Set up ONE vector database")
+p("Pick **one** of the three. Each ingestion workflow is the **same shape** — **Manual Trigger → List Drive folder → "
+  "Download each brochure → Recursive Character Text Splitter → Embeddings (OpenAI) → Vector Store (Insert)** — only "
+  "the final **Vector Store** node changes.")
+h3("Step 2A — Supabase (pgvector)")
 steps([
-    "In the console, open **API Keys** and **create / copy** an API key (you'll paste it into n8n).",
-    "Open **Indexes → Create index** and give it a name, e.g. `n8n-course`.",
-    "Set **Dimensions = 1536** to match OpenAI `text-embedding-3-small` (the embeddings used in this lab).",
-    "Set **Metric = cosine**, then create the index.",
+    "Create a project at https://supabase.com and note the project **URL** + **service_role** key (Project Settings → API).",
+    "In the **SQL Editor**, enable the extension and create the table + search function: "
+    "`create extension if not exists vector;` then a `documents` table with `embedding vector(1536)` and a "
+    "`match_documents(...)` function (full SQL is in `LEARNER-GUIDE-7b.md`).",
+    "In n8n add a **Supabase API** credential (Host = project URL, Service Role Secret = service_role key).",
+    "Import `Activity7b-Supabase-Upload.json`.",
 ])
-note("The embedding model on **both** the upload and the chat workflows must be the **same** (here, OpenAI "
-     "`text-embedding-3-small` = 1536 dims) — otherwise the vector dimensions won't match the index.")
-h3("Step 3 — Upload your documents into Pinecone")
+B.append(("img","labs/activity7-rag/Activity7b-Supabase-Upload.png","Supabase ingestion — Manual Trigger → List & download brochures → split → embed (OpenAI 1536-d) → Supabase Vector Store (Insert)"))
+h3("Step 2B — Pinecone")
 steps([
-    "Import `Activity7b-Pinecone-Upload.json`.",
-    "Add a **Pinecone** credential (paste your API key) and select your `n8n-course` index on the Pinecone node.",
-    "Add your **OpenAI** credential on the Embeddings node.",
-    "Provide your documents (e.g. the HR SOP / IT FAQ) and run the workflow to embed and insert them into Pinecone.",
+    "At https://app.pinecone.io create an index named **`course-brochures`**, **Dimensions = 1536**, **Metric = cosine** (serverless region).",
+    "Copy your **API key** (API Keys), then add a **Pinecone API** credential in n8n.",
+    "Import `Activity7b-Pinecone-Upload.json`; in the Pinecone Vector Store node select the `course-brochures` index "
+    "(brochures are stored under namespace **`brochures`**).",
 ])
-h3("Step 4 — Chat with your Pinecone knowledge base")
+B.append(("img","labs/activity7-rag/Activity7b-Pinecone-Upload.png","Pinecone ingestion — same flow, ending at a Pinecone Vector Store (Insert) node"))
+h3("Step 2C — Qdrant")
 steps([
-    "Import `Activity7b-Pinecone-RAG.json` (Telegram → AI Agent + Pinecone Vector Store tool → reply).",
-    "Select the **same** Pinecone index and credential, your **OpenAI** key (gpt-4.1-mini), and your **Telegram** credential.",
-    "**Save** and toggle **Active**.",
+    "Use **Qdrant Cloud** (create a free cluster, copy the URL + API key) **or** self-host: "
+    "`docker run -p 6333:6333 qdrant/qdrant`.",
+    "Optionally create the collection `course-brochures` (size 1536, distance Cosine) — n8n can also auto-create it.",
+    "Add a **Qdrant API** credential in n8n (URL + API key), then import `Activity7b-Qdrant-Upload.json`.",
 ])
-B.append(("test","Upload a document, then ask the Telegram bot a question only answerable from it — the answer is retrieved from your Pinecone index, and it survives a workflow restart."))
+B.append(("img","labs/activity7-rag/Activity7b-Qdrant-Upload.png","Qdrant ingestion — same flow, ending at a Qdrant Vector Store (Insert) node"))
+h3("Step 3 — Ingest the brochures")
+steps([
+    "Open the ingestion workflow you imported in Step 2.",
+    "Set the **Drive folder ID** on **List Brochures in Folder**, and select your **Google Drive**, **OpenAI** and **vector-DB** credentials.",
+    "Click **Execute workflow**. It lists, downloads, splits, embeds and upserts ~**30–60 vectors**. Verify the rows/points appear in your DB.",
+])
+h3("Step 4 — Connect the CX Agent to the website")
+steps([
+    "Import **`Activity7b-CX-Agent.json`** (the answering workflow: Webhook → AI Agent + retriever → Respond to Webhook).",
+    "Point its **retriever** vector-store node at the **same** store/index/collection you ingested into (same 1536-dim embeddings); add your OpenAI + DB credentials.",
+    "**Activate** and copy the **Webhook production URL**.",
+    "In `website/script.js`, set `WEBHOOK_URL` to that URL, then open `website/index.html` and click the 💬 chat button.",
+])
+B.append(("img","labs/activity7-rag/Activity7b-website.png","Cook & Bake Academy — the one-page training-center site with a floating RAG chatbot widget"))
+B.append(("test","On the website chat widget ask *\"How much is the sourdough course?\"*, *\"How long is the French "
+                 "Pastry course?\"* or *\"Where are you located?\"* — the chatbot answers grounded in the brochures "
+                 "retrieved from your vector database."))
 
 # ============================================================================
 # DAY 3  —  Topic 6: Security and Guardrails
@@ -497,6 +544,7 @@ bullets([
     "**Post-guardrail** — checks the *output* (no confidential data, no disallowed content) before it is sent to the user.",
     "When a guardrail trips, the workflow branches to a safe canned reply instead of the agent's response.",
 ])
+B.append(("img","labs/activity8-guardrails/Activity8-website.png","The HR Service Portal — one page with Dashboard, Apply Leave, HR Assistant and Settings tabs, wired to the three n8n workflows"))
 
 act("Activity 8a — Human-in-the-Loop Approval (Leave Application)")
 p("**Folder:** `labs/activity8-guardrails/`")
@@ -578,6 +626,7 @@ p("Bring it together. In small groups, design and build an end-to-end automation
   "trigger (form/Telegram/webhook), an AI agent with at least one **tool** or **RAG** source, an external "
   "**API** or storage, and a **guardrail** or human-in-the-loop step. A worked example — an **Issue Reporting** "
   "flow (form + image → Postgres, with a retrieval API and gallery) — is provided in the folder.")
+B.append(("img","labs/mini-capstone/issue-tracking/Capstone-website.png","Worked capstone example — Issue Reporting: paste your n8n Form URL to generate a QR code people scan to submit issues (with photos) into Postgres + a gallery"))
 h3("Deliverables")
 bullets([
     "A working n8n workflow (exported `.json`).",
@@ -625,7 +674,7 @@ p("You're done — congratulations! Keep your local n8n running to continue buil
 # RENDERERS
 # ============================================================================
 TITLE = "Agentic AI Automation with n8n"
-VERSION = "5.0"
+VERSION = "6.0"
 VERSIONS = [
     ("1.0", "2 Feb 2023", "First version", "Dr. Alfred Ang"),
     ("2.0", "16 June 2025", "Updated course title and content", "Tertiary Infotech Pte Ltd"),
@@ -638,6 +687,11 @@ VERSIONS = [
      "Tertiary Infotech Academy Pte Ltd"),
     ("5.0", "26 June 2026", "Added topic-level headings (Topic 1–6) to group activities; DOCX TOC now shows "
                             "a two-level hierarchy of Topics and Activities",
+     "Tertiary Infotech Academy Pte Ltd"),
+    ("6.0", "1 July 2026", "Replaced Activity 7 with two new RAG labs: Activity 7a — RAG chatbot (web PDF upload "
+                           "→ in-memory vector store → Telegram Q&A on an IT-Support FAQ); Activity 7b — "
+                           "customer-support RAG agent for a training center across three vector databases "
+                           "(Supabase pgvector, Pinecone, Qdrant); new workflow screenshots",
      "Tertiary Infotech Academy Pte Ltd"),
 ]
 
@@ -860,7 +914,6 @@ ACT_IMG = {
     "Activity 4b": ("labs/activity4-telegram-agent/Activity4b-Telegram-Data-Table.png", "Activity 4b workflow — Agent with a Data Table tool"),
     "Activity 5 ": ("labs/activity5-investment-advisor/Activity5-Investment-Advisor.png", "Activity 5 workflow — Webhook chatbot + enquiry"),
     "Activity 6 ": ("labs/activity6-finance-advisor/Activity6-Finance-Advisor.png", "Activity 6 workflow — Finance API to Telegram day trader"),
-    "Activity 7 ": ("labs/activity7-rag/Activity7-RAG-Telegram.png",               "Activity 7 workflow — Agent with RAG + Data Table sources"),
     "Activity 8a": ("labs/activity8-guardrails/Activity8 - Leave Application & Manager Approval (Human-in-the-Loop).png",
                     "Activity 8a workflow — human-in-the-loop leave approval"),
     "Activity 8b": ("labs/activity8-guardrails/Activity8 - Dashboard Data (Leave Balance & History).png",
@@ -886,7 +939,7 @@ B = insert_images(B)
 md = render_markdown(B)
 with open(os.path.join(REPO, "LEARNER-GUIDE.md"), "w", encoding="utf-8") as f:
     f.write(md)
-DOCX_OUT = os.path.join(REPO, "courseware/n8n Automation Learner Guide.docx")
+DOCX_OUT = os.path.join(REPO, "courseware/LG-Agentic AI Automation with n8n.docx")
 render_docx(B).save(DOCX_OUT)
 
 # Update the TOC field in the saved DOCX using Word automation (Windows only).
