@@ -40,8 +40,9 @@ def _logo(name):
     return None
 
 # ─── EDIT PER COURSE ─────────────────────────────────────────────
-TITLE       = "Agentic AI Automation with n8n"   # <<Course Title>>
-COURSE_CODE = "TGS-2023035977"                    # <<Course Code, e.g. TGS-XXXXXXXXXX>>
+TITLE       = "No Code and Low Code Agentic AI Applications"   # <<Course Title>>
+COURSE_CODE = "TGS-2026062147"                                  # <<Course Code, e.g. TGS-XXXXXXXXXX>>
+REPO_URL    = "https://github.com/tertiarycourses/TGS-2026062147-No-Code-and-Low-Code-Agentic-AI-Applications"
 # ─────────────────────────────────────────────────────────────────
 
 # ============================================================================
@@ -64,17 +65,19 @@ def rule():   B.append(("rule",))
 # ---------------------------------------------------------------- Title / intro
 h1(f"{TITLE} — Step-by-Step Learner Guide")
 p("Welcome! This guide takes you click-by-click through every hands-on lab in the WSQ course "
-  f"**{TITLE}** (Course Code: {COURSE_CODE}). Over three days you will go from "
-  "simple form automations to AI agents, Retrieval-Augmented Generation (RAG), webhooks, external APIs, "
-  "and finally human-in-the-loop guardrails — then build a mini capstone of your own.")
+  f"**{TITLE}** (Course Code: {COURSE_CODE}). Over four days you will go from "
+  "simple form automations to AI agents, webhooks and external APIs, Retrieval-Augmented Generation (RAG), "
+  "human-in-the-loop guardrails, real business use cases (banking onboarding and client communications), "
+  "and voice agents with ElevenLabs and Vapi — then build a mini capstone of your own.")
 p("Work through the activities in order: each one builds on the skills (and sometimes the workflow) of the "
   "activity before it. Whenever you see a **Test it** box, stop and confirm your workflow behaves as described "
   "before moving on.")
 
 note("Course flow at a glance — "
-     "Day 1: Workflow Automation (Activities 1-3) + AI Agents (Activity 4). "
-     "Day 2: Webhooks (Activity 5) · APIs (Activity 6) · RAG (Activities 7a, 7b). "
-     "Day 3: Security & Guardrails (Activity 8) + Mini Capstone.")
+     "Day 1: Fundamentals of n8n (Activities 1-3) + AI Agents (Activity 4). "
+     "Day 2: Webhook and HTTP Request (Activities 5, 6) · RAG (Activities 7a, 7b). "
+     "Day 3: Human in the Loop and Guardrails (Activity 8) + Use Cases of Agentic AI (Activities 9, 10). "
+     "Day 4: Voice Agents (Activities 11, 12) + Mini Capstone Project and Presentation.")
 
 # ---------------------------------------------------------------- 0. Setup
 rule()
@@ -91,6 +94,9 @@ table([
     ["Google account", "Google Sheets storage (Activity 3b)", "Your Google account (training account provided)"],
     ["Twelve Data", "Live market data (Activity 6)", "twelvedata.com — free API key"],
     ["NewsAPI", "Headlines & sentiment (Activity 6)", "newsapi.org — free API key"],
+    ["Google Calendar", "Voice booking agent (Activity 11)", "Your Google account; connected via OAuth2"],
+    ["ElevenLabs", "Voice agent platform (Activity 11)", "elevenlabs.io — sign up, copy your API key"],
+    ["Vapi", "Voice agent platform (Activity 12)", "vapi.ai — sign up, copy your PUBLIC key"],
 ])
 
 h3("0.2 Run n8n — Cloud trial OR local Docker")
@@ -141,7 +147,7 @@ note("Imported workflows reference credential *names*, not your actual secrets. 
 h3("0.4 Download the workflows from GitHub")
 p("All the finished workflow `.json` files, the mock data (CSV) and the sample documents are in the course "
   "GitHub repository — download them so you can import and follow along:")
-note("**GitHub repo:** https://github.com/tertiarycourses/TGS-2023035977-Agentic-AI-Automation-with-n8n  ·  "
+note(f"**GitHub repo:** {REPO_URL}  ·  "
      "every activity lives under the **`labs/`** folder (one folder per activity), each with its workflow JSON, "
      "a workflow diagram, and any mock data.")
 steps([
@@ -156,7 +162,7 @@ steps([
 # DAY 1  —  Topic 1: Workflow Automation   |   Topic 2: AI Agents
 # ============================================================================
 rule()
-topic("Topic 1: Workflow Automation with n8n")
+topic("Topic 1: Fundamentals of n8n")
 p("**Day 1 morning.** In these activities you build the core building blocks: a form trigger, email actions, "
   "data storage, and conditional logic — the foundation for everything that follows.")
 
@@ -302,9 +308,10 @@ B.append(("test", "Ask the bot \"Which department is <a name from the CSV> in?\"
 # DAY 2  —  Topic 3: Webhooks  |  Topic 4: APIs  |  Topic 5: RAG
 # ============================================================================
 rule()
-topic("Topic 3: Webhooks")
-p("**Day 2 morning.** Expose your n8n workflows to the web. A webhook turns any workflow into an API "
-  "endpoint that a browser page or external service can call in real time.")
+topic("Topic 3: Webhook and HTTP Request")
+p("**Day 2.** Connect your n8n workflows to the outside world in both directions. A **webhook** turns any "
+  "workflow into an API endpoint that a browser page or external service can call in real time; the "
+  "**HTTP Request** node lets your workflow call external APIs and pull live data in.")
 
 act("Activity 5 — Website Chatbot via Webhook (Investment Advisor)")
 p("**Folder:** `labs/activity5-investment-advisor/`  ·  Reference: https://alfredang.github.io/n8n-investmentadvisor/")
@@ -331,11 +338,6 @@ steps([
 B.append(("img","labs/activity5-investment-advisor/Activity5-website.png","The Investment Advisor website — enquiry form + floating 'Ask Advisor' chatbot, both posting to one n8n webhook"))
 note("Get a few learners to present their live website and chatbot.")
 B.append(("test", "On the website, send a chat message and submit the enquiry form; confirm the bot replies and the advisor receives the enquiry email."))
-
-rule()
-topic("Topic 4: APIs and HTTP Requests")
-p("**Day 2 afternoon (first half).** Pull live data from external APIs into your workflows using the "
-  "**HTTP Request** node. You will connect to a financial data API and a news API.")
 
 act("Activity 6 — Finance API → Telegram (AI Day-Trading Agent)")
 p("**Folder:** `labs/activity6-finance-advisor/`  ·  Reference: https://alfredang.github.io/n8n-financeadvisor/")
@@ -402,7 +404,7 @@ B.append(("test", "Message the bot \"Should I buy AAPL?\" and confirm it returns
                   "If you get a 401/429 from an HTTP node, re-check the corresponding API key (401 = wrong key, 429 = rate limit)."))
 
 rule()
-topic("Topic 5: Retrieval-Augmented Generation (RAG)")
+topic("Topic 4: Retrieval-Augmented Generation (RAG)")
 p("**Day 2 afternoon (second half).** Extend the Telegram agent with document knowledge. RAG lets the agent "
   "answer questions from PDFs and Word documents by retrieving the most relevant chunks at query time.")
 
@@ -537,10 +539,10 @@ B.append(("test","On the website chat widget ask *\"How much is the sourdough co
                  "retrieved from your vector database."))
 
 # ============================================================================
-# DAY 3  —  Topic 6: Security and Guardrails
+# DAY 3  —  Topic 5: Human in the Loop and Guardrails
 # ============================================================================
 rule()
-topic("Topic 6: Security and Guardrails")
+topic("Topic 5: Human in the Loop and Guardrails")
 p("**Day 3 morning.** Make your AI automations trustworthy. You will build an integrated HR Service Portal "
   "backed by three workflows covering human-in-the-loop approval, a live data dashboard, and an AI chatbot "
   "with pre/post guardrails.")
@@ -642,8 +644,223 @@ B.append(("test", "Normal path: ask \"How many annual leave days do I get?\" —
                   "reply appears in amber. Blocked by output guardrail: ask \"What is the salary of [staff name]?\" — "
                   "a safe reply is returned instead."))
 
+# ============================================================================
+# DAY 3 PM  —  Topic 6: Use Cases of Agentic AI
+# ============================================================================
 rule()
-h2("Mini Capstone Project")
+topic("Topic 6: Use Cases of Agentic AI")
+p("**Day 3 afternoon.** Apply everything you have built to two realistic business use cases. Each use case "
+  "follows the **4-step problem-solving framework** — problem definition, root cause analysis, solution "
+  "ideation, then the n8n build — and each shows the key design decision of agentic automation: **which "
+  "steps the AI agent decides, and which stay deterministic.**")
+
+act("Activity 9 — Use Case: Retail Banking Customer Onboarding Agent")
+p("**Folder:** `labs/activity9-banking-onboarding/` (form version in `form-version/`, bank website in `website-version/`)")
+h3("Scenario")
+p("**Marina Trust Bank** (fictitious) takes new-account applications on paper. Applications sit in a queue "
+  "for 3–5 days; the same customer sometimes ends up with two records; eligibility rules live in a binder "
+  "and are applied inconsistently; KYC screening for politically exposed persons is done from memory; "
+  "confirmation emails are typed by hand and often forgotten.")
+h3("Part A — Problem solving (group discussion)")
+steps([
+    "**Problem definition** — state the problem so it is measurable: time-to-decision is 3–5 days and the "
+    "duplicate-record rate is ~6%. Targets: under 2 minutes, 0% duplicates, 100% rule consistency.",
+    "**Root cause analysis** — the 5 Whys: no automated duplicate validation; manual data-entry errors; no "
+    "integration between form, spreadsheet and email; delayed confirmations; rules applied by humans from a binder.",
+    "**Solution ideation** — map each root cause to a countermeasure and decide: deterministic node or AI "
+    "Agent decision?",
+])
+h3("Agent decision vs deterministic step")
+table([
+    ["Concern", "Give it to", "Why"],
+    ["Trimming whitespace, upper-casing the NRIC", "Set node", "Deterministic — an LLM adds latency and non-determinism for a .trim()"],
+    ["Computing age from date of birth", "Set node", "Date arithmetic is what an LLM is worst at — compute it, hand the agent a number"],
+    ["Looking up an NRIC in the sheet", "A tool the agent calls", "The lookup is deterministic; the decision to call it is the agent's"],
+    ["Choosing APPROVE / REJECT / DUPLICATE / REVIEW", "AI Agent", "It reasons over the rules and the lookup result"],
+    ["Writing the customer-facing email copy", "AI Agent", "Natural language and tone"],
+    ["Appending the audit-log row", "Google Sheets node", "Must happen on every run — never trust an agent to log itself"],
+])
+h3("Part B — Build the onboarding agent (form version)")
+steps([
+    "Create a Google Sheet named `Retail Banking Onboarding` with two tabs: import `customers.csv` "
+    "(existing customers) and `onboarding-log.csv` (the audit log headers).",
+    "Import **`LU1-Activity1-Retail-Banking-Onboarding.json`** into n8n.",
+    "Re-select your **Google Sheets**, **Gemini/OpenAI** and **Gmail** credentials on their nodes.",
+    "Open the AI Agent and review its **three tools**: `check_duplicate_customer` (Sheets lookup by NRIC), "
+    "`create_customer_record` (Sheets append), and the Gmail tool for the confirmation email.",
+    "Read the **system message**: the eligibility rules (age, residency, account types) and the KYC/PEP "
+    "screening instructions live there — the agent applies them the same way every time.",
+    "Run the test applications from `test-applications.csv`: one clean approval, one duplicate NRIC, one "
+    "under-age rejection, and one PEP name that must be flagged **REVIEW**.",
+])
+h3("The bank website version (webhook front door)")
+p("No bank puts an n8n form in front of customers. The website version swaps the **Form Trigger** for a "
+  "**Webhook** — the agent, its tools, its rules are byte-for-byte identical. Only how the request arrives "
+  "(JSON POST from `index.html`) and how the answer returns (**Respond to Webhook**) change.")
+steps([
+    "Import **`LU1-Activity1b-Onboarding-Webhook.json`** from `website-version/`.",
+    "Re-select the same Sheets / LLM / Gmail credentials; point the tools at the **same** spreadsheet.",
+    "Open the `Onboarding Webhook` node: Method **POST**, path `marina-trust-onboarding`, "
+    "**Allowed Origins (CORS)** = `*`.",
+    "**Save**, toggle **Active**, and copy the **Production URL** (not the Test URL — the Test URL listens "
+    "for exactly one request).",
+    "Paste the URL into the website's settings (in `script.js` / the page's config), then open `index.html` "
+    "and submit an application from the bank's own site.",
+])
+B.append(("img","labs/activity9-banking-onboarding/website-version/Activity9-website.png",
+          "Marina Trust Bank — the public onboarding site: hero, criteria table, application form and result panel, all posting to your n8n webhook"))
+B.append(("test","Submit a duplicate NRIC from the website — the agent returns **DUPLICATE** and no new record is "
+                 "created. Submit a clean application — the decision returns to the page, the record is created, the "
+                 "confirmation email arrives, and the audit log gains a row in every case."))
+
+act("Activity 10 — Use Case: Client Rapport Assistant with Human Handover")
+p("**Folder:** `labs/activity10-client-rapport/`")
+h3("Scenario")
+p("**Meridian Asset Management** (fictitious) manages portfolios for private clients. When markets move, "
+  "worried clients write in. Replies take three days, tone is inconsistent, and one rushed manager once "
+  "wrote *\"don't worry, it always bounces back\"* — unlicensed financial advice. The firm wants AI speed "
+  "**with** human accountability: the agent drafts, a licensed relationship manager approves.")
+h3("The design")
+p("The agent classifies the query, reads the emotional tone, flags risk phrases and drafts a strictly "
+  "non-advisory reply — but **it never sends**. Every draft goes to a relationship manager by email "
+  "(Gmail **Send and Wait for Response**) with Approve / Decline buttons. Approved → the reply is sent and "
+  "logged. Declined → the ticket lands in a human handover queue. Three sheet tabs keep the audit trail: "
+  "`Drafts` (what the machine proposed), `Approved_Replies` (what a human authorised), `Handover_Queue` "
+  "(what a human took over).")
+h3("Step-by-step")
+steps([
+    "Create a Google Sheet named exactly **`Meridian Client Rapport`** with three tabs — `Drafts`, "
+    "`Approved_Replies`, `Handover_Queue` — importing `drafts.csv`, `approved-replies.csv` and "
+    "`handover-queue.csv` as the headers (File → Import → Replace current sheet).",
+    "Import **`LU2-Activity2b-Client-Rapport-Assistant.json`** into n8n.",
+    "Re-select your **Gemini/OpenAI**, **Google Sheets** and **Gmail** credentials.",
+    "Review the agent's system message: classify the concern, read the tone, draft a warm, compliant reply — "
+    "**never** advice, **never** a market prediction.",
+    "Open the `Client Query Webhook`: **Allowed Origins (CORS)** = `*`. **Save**, **Activate**, and copy the "
+    "**Production URL** into the website's settings.",
+    "Open `index.html` and send a worried-client message from the floating chat widget — the client sees an "
+    "**acknowledgement**, never the draft.",
+    "Check the relationship-manager inbox: the approval email shows the classification, the flags and the "
+    "full draft, with **Approve / Decline** buttons.",
+    "Approve one draft and decline another; watch each path complete.",
+])
+B.append(("img","labs/activity10-client-rapport/Activity10-website.png",
+          "Meridian Asset Management — the client portal with the floating chat widget; every reply is human-approved before it is sent"))
+B.append(("test","The client only ever receives a reply **after** the manager clicks Approve. Verify the audit "
+                 "trail: the draft in `Drafts`, the sent reply in `Approved_Replies`, and the declined ticket in "
+                 "`Handover_Queue` with the human-agent notification email."))
+
+# ============================================================================
+# DAY 4  —  Topic 7: Voice Agents
+# ============================================================================
+rule()
+topic("Topic 7: Voice Agents")
+p("**Day 4 morning.** Put a voice on your agents. Both labs build a real, working phone-style assistant in "
+  "the browser — but they split the work in opposite ways, and the contrast is the lesson: with "
+  "**ElevenLabs** the vendor runs the model and calls **your n8n tools**; with **Vapi** your n8n workflow "
+  "**is** the model (a \"Custom LLM\").")
+table([
+    ["", "Activity 11 — ElevenLabs (GG Hair Salon)", "Activity 12 — Vapi (MediRefill)"],
+    ["Who runs the model", "ElevenLabs", "your n8n workflow (Vapi Custom LLM)"],
+    ["What n8n does", "mints a signed URL, serves the tools", "is the brain"],
+    ["Call path", "browser → n8n → signed URL → WebSocket", "browser → Vapi, then Vapi → your n8n"],
+    ["What the browser gets", "a short-lived signed URL", "the Vapi PUBLIC key only"],
+    ["What it never sees", "your xi-api-key", "your Vapi private key"],
+])
+note("**Reachability rule:** the voice vendor's SERVERS call your n8n tool webhooks, so those URLs must be "
+     "public. An n8n Cloud workspace (`https://<your-workspace>.app.n8n.cloud`) is already public — use its "
+     "Production webhook URLs directly. If you self-host on localhost, expose it first with a tunnel: "
+     "`ngrok http 5678`, then replace `http://localhost:5678` with the ngrok address (everything after "
+     "`/webhook/` stays the same).")
+
+act("Activity 11 — Voice Booking Agent with ElevenLabs (GG Hair Salon)")
+p("**Folder:** `labs/activity11-voice-elevenlabs/`")
+h3("Goal")
+p("**Nina** is GG Hair Salon's voice receptionist. She answers by voice, quotes real prices from the salon "
+  "handbook PDF in her Knowledge Base, checks a real **Google Calendar** for free slots, and books a real "
+  "appointment — through two n8n tool webhooks that ElevenLabs' servers call during the conversation.")
+h3("Key concepts")
+bullets([
+    "**Signed URL** — n8n asks ElevenLabs for a short-lived signed URL server-side, using your `xi-api-key` "
+    "in a Header Auth credential. The browser gets only the signed URL: **your API key never reaches the browser**.",
+    "**Agent tools** — `check_availability` and `book_appointment` are n8n webhooks that **ElevenLabs' servers** "
+    "call mid-conversation. They must be publicly reachable.",
+    "**Grounded voice** — the salon-handbook PDF in Nina's Knowledge Base is why she quotes real prices "
+    "instead of inventing them.",
+])
+h3("Step-by-step")
+steps([
+    "Import **both** flows — `elevenlabs-web-call-flow.json` and `elevenlabs-booking-tools-flow.json` — and "
+    "set both **Active**.",
+    "On the **Get Signed URL** node, add a **Header Auth** credential named `ElevenLabs API`: "
+    "Name = `xi-api-key`, Value = your ElevenLabs API key.",
+    "Connect **your own Google account** on the two **Google Calendar** nodes (the flow ships without a "
+    "calendar credential on purpose).",
+    "In the **ElevenLabs dashboard**, create a Conversational AI agent named **Nina** and upload "
+    "`knowledge-base/gg-hair-salon-handbook.pdf` to her **Knowledge Base**.",
+    "Register Nina's two **tools** with your public n8n webhook URLs: `…/webhook/check-availability` and "
+    "`…/webhook/book-appointment`.",
+    "Paste Nina's **agent ID** and your web-call webhook URL into the website's **⚙ Settings** — nothing is "
+    "hardcoded in the page.",
+    "Serve the site — `python3 -m http.server 8090` from the `website/` folder — open http://localhost:8090, "
+    "click **Book by Voice**, allow the microphone, and book a Thursday 2 PM haircut end to end.",
+])
+B.append(("img","labs/activity11-voice-elevenlabs/screenshots/lab4-website-home.png",
+          "GG Hair Salon — the Book by Voice call to action"))
+B.append(("img","labs/activity11-voice-elevenlabs/screenshots/lab4-webhook-settings.png",
+          "The page's ⚙ Settings — your own web-call webhook URL and agent ID; nothing is hardcoded"))
+h3("Grade the conversation")
+bullets([
+    "Ask *\"How much is a women's cut?\"* — **$65**, from the handbook. A vague price means the Knowledge Base is not attached.",
+    "Ask about the cancellation policy — the **12-hour rule** and **50% late charge** exist only in the PDF: that is the grounding proof.",
+    "Ask for a taken slot — she offers an alternative instead of double-booking.",
+    "Ask *\"Do you do nail extensions?\"* — she declines to guess. If she invents a nail price, the grounding instruction is missing.",
+    "Say only *\"sometime Thursday\"* — she must ask a repair question for the time, not silently invent 9:00 AM.",
+])
+B.append(("test","Nina answers by voice and quotes handbook prices; the booking appears in **your** Google Calendar; "
+                 "and a tool execution appears in n8n **during** the call. If she says \"let me check that\" and stalls "
+                 "forever, her tool URLs are not publicly reachable — fix the webhook URLs."))
+
+act("Activity 12 — Grounded FAQ Voice Agent with Vapi (MediRefill)")
+p("**Folder:** `labs/activity12-voice-vapi/`")
+h3("Goal")
+p("**Ava** is MediRefill pharmacy's refill assistant — and her brain is **your n8n workflow**. Vapi does the "
+  "speech-to-text and the voice, then calls your webhook as its model (**Custom LLM**). Ava answers only "
+  "from six FAQ topics and **hard-refuses all medical advice** with fixed wording plus a pharmacist callback.")
+h3("Key concepts")
+bullets([
+    "**Custom LLM** — Vapi POSTs an OpenAI-shaped request to your webhook; your AI Agent answers; you return "
+    "an OpenAI-shaped response. n8n **is** the brain.",
+    "**Public vs private key** — the web page gets the Vapi **public** key only (it can merely start calls). "
+    "The **private** key manages your whole account and never goes into a page.",
+    "**The safety boundary** — dose, interaction, substitution, symptom: one **fixed refusal sentence** and a "
+    "pharmacist callback; an emergency gets **995 / A&E**. Fixed wording in the prompt — never the model's judgement.",
+])
+h3("Step-by-step")
+steps([
+    "Import **`vapi-faq-flow.json`** and set it **Active**. Read `ava-assistant-prompt.md` — the guardrail "
+    "lives in its wording.",
+    "Re-select your **OpenAI** credential on the FAQ Agent's chat model.",
+    "**Prove the webhook with curl before any audio:** "
+    "`curl -X POST https://<your-n8n>/webhook/vapi-faq -H 'Content-Type: application/json' "
+    "-d '{\"model\":\"gpt-4.1-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"When will my refill arrive?\"}]}'` "
+    "— a real answer means webhook and agent are healthy. Debugging over HTTP is far easier than over audio.",
+    "In **Vapi**, create an assistant whose model is a **Custom LLM** pointing at that URL.",
+    "Serve the site — `python3 -m http.server 8091` from the `website/` folder — and paste your Vapi "
+    "**PUBLIC key** and **assistant ID** into the page's **⚙ Settings**.",
+    "Run the three graded calls: *\"When will my refill arrive?\"* · *\"Can I take two instead of one?\"* · "
+    "*\"I'm having chest pains.\"*",
+])
+B.append(("img","labs/activity12-voice-vapi/screenshots/lab5-vapi-flow.png",
+          "The Vapi Custom-LLM flow — webhook → AI Agent → OpenAI-shaped response"))
+B.append(("img","labs/activity12-voice-vapi/screenshots/lab5-vapi-site.png",
+          "MediRefill — Ava, the prescription-refill voice assistant, built on the Vapi Web SDK"))
+B.append(("test","Refill question → the grounded answer (2–3 working days, free above $60). Medical question → the "
+                 "fixed refusal + pharmacist callback, with no medical content, not even hedged. Emergency → the "
+                 "995 / A&E escalation. Save the transcript — it is your evidence."))
+
+rule()
+topic("Topic 8: Mini Capstone Project and Presentation")
 p("**Folder:** `labs/mini-capstone/`")
 h3("Goal")
 p("Bring it together. In small groups, design and build an end-to-end automation that uses what you learned: a "
@@ -658,8 +875,10 @@ bullets([
     "A 3-5 minute presentation: problem, design, what you'd improve.",
 ])
 h3("Assessment")
-p("Your capstone and the activities across the three days are assessed against the course learning outcomes: "
-  "workflow design, AI agent / RAG integration, webhook & API use, and the application of security guardrails.")
+p("Your capstone and the activities across the four days are assessed against the course learning outcomes: "
+  "workflow design, AI agent / RAG integration, webhook & API use, human-in-the-loop and guardrails, "
+  "business use cases, and voice agents. The final assessment is a Written Assessment (SAQ, 1 hour) plus a "
+  "Practical Performance assessment (1 hour), both open book.")
 
 rule()
 h2("Troubleshooting Cheat-Sheet")
@@ -672,6 +891,9 @@ table([
     ["Data Table data disappeared", "Trial Data Tables are not permanent — use Google Sheets/Excel (Activity 3b) for persistence."],
     ["API returns 401/429", "401 = wrong/missing API key; 429 = rate limit — wait, or reduce request frequency."],
     ["HR portal dashboard shows CORS error", "Add `N8N_CORS_ENABLED=true` and `N8N_CORS_ALLOW_ORIGIN=*` to your n8n environment and restart."],
+    ["Voice agent says 'let me check that' and stalls forever", "Its tool webhook URL is not publicly reachable — use your n8n Cloud Production URL (or an ngrok tunnel for localhost) and re-publish the agent."],
+    ["Vapi assistant is silent mid-call", "Vapi cannot reach the Custom LLM URL — verify with the curl test; check the workflow is Active and the URL is the Production one."],
+    ["Voice page rejects the key", "You pasted the PRIVATE key — the web page must only ever hold the Vapi PUBLIC key."],
 ])
 
 rule()
@@ -690,6 +912,10 @@ table([
     ["Webhook", "A URL that external systems call to trigger a workflow."],
     ["Guardrail", "A safety check on an agent's input (pre) or output (post)."],
     ["Human in the loop", "A pause for a person to approve/reject before the flow continues."],
+    ["Voice agent", "An agent that listens (speech-to-text), reasons (LLM), and speaks (text-to-speech) in real time."],
+    ["Signed URL", "A short-lived URL minted server-side so the browser never sees your API key (ElevenLabs)."],
+    ["Custom LLM", "A Vapi assistant whose model is YOUR webhook — your n8n workflow is the brain."],
+    ["Grounding", "Restricting an agent's answers to a known source (handbook PDF, FAQ topics, brochures)."],
 ])
 
 p("You're done — congratulations! Keep your local n8n running to continue building your own agents.")
@@ -697,38 +923,16 @@ p("You're done — congratulations! Keep your local n8n running to continue buil
 # ============================================================================
 # RENDERERS
 # ============================================================================
-VERSION = "6.3"
+VERSION = "1.0"
 VERSIONS = [
-    ("1.0", "2 Feb 2023", "First version", "Dr. Alfred Ang"),
-    ("2.0", "16 June 2025", "Updated course title and content", "Tertiary Infotech Pte Ltd"),
-    ("3.0", "24 June 2026", "Restructured to 8 activities; aligned to the agentic n8n flow "
-                            "(Telegram agents, RAG, webhooks, APIs, guardrails); MD and DOCX aligned",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("4.0", "26 June 2026", "Renumbered Day 2 activities: Investment Advisor → Activity 5, Finance Advisor → "
-                            "Activity 6, RAG → Activity 7; rewrote Activity 8 as the integrated HR Service Portal "
-                            "(Leave Approval, Dashboard Data, AI Chatbot with Guardrails)",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("5.0", "26 June 2026", "Added topic-level headings (Topic 1–6) to group activities; DOCX TOC now shows "
-                            "a two-level hierarchy of Topics and Activities",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("6.0", "1 July 2026", "Replaced Activity 7 with two new RAG labs: Activity 7a — RAG chatbot (web PDF upload "
-                           "→ in-memory vector store → Telegram Q&A on an IT-Support FAQ); Activity 7b — "
-                           "customer-support RAG agent for a training center across three vector databases "
-                           "(Supabase pgvector, Pinecone, Qdrant); new workflow screenshots",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("6.1", "1 July 2026", "Added a page-numbered Table of Contents; embedded real n8n flow screenshots and "
-                           "activity website screenshots for every activity (5, 6, 7a, 7b, 8, capstone); expanded "
-                           "step-by-step detail; aligned the Learner Guide (DOCX + Markdown) with the slides, "
-                           "Lesson Plan and lab workflows",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("6.2", "3 July 2026", "Updated Activity 7b to the fixed lab flows: Pinecone ingestion + CX Agent now use "
-                           "Google Gemini gemini-embedding-001 embeddings (3072-dim index) with whole-brochure "
-                           "chunks (one brochure = one vector); CX Agent webhook fixed to POST + Respond to "
-                           "Webhook with a Pinecone retriever tool and Gemini chat model; added the matching "
-                           "upload/retrieval namespace rule; new workflow screenshots",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("6.3", "3 July 2026", "Relocated courseware assets and build scripts into the .claude/skills folder; "
-                           "updated embedded image links accordingly (no content changes)",
+    ("1.0", "17 July 2026", "First version — 4-day Learner Guide for No Code and Low Code Agentic AI "
+                            "Applications (TGS-2026062147). Topics 1–4 (Fundamentals of n8n, AI Agents, "
+                            "Webhook and HTTP Request, RAG — Activities 1–7b) adapted from Agentic AI "
+                            "Automation with n8n; Topic 5 Human in the Loop and Guardrails (Activity 8); "
+                            "Topic 6 Use Cases of Agentic AI (Activity 9 retail banking onboarding, "
+                            "Activity 10 client rapport assistant with human handover); Topic 7 Voice Agents "
+                            "(Activity 11 ElevenLabs voice booking, Activity 12 Vapi grounded FAQ); Topic 8 "
+                            "Mini Capstone Project and Presentation",
      "Tertiary Infotech Academy Pte Ltd"),
 ]
 

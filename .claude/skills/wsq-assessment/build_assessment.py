@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Build the WSQ assessment set for 'Agentic AI Automation with n8n' (TGS-2023035977):
+"""Build the WSQ assessment set for 'No Code and Low Code Agentic AI Applications' (TGS-2026062147):
   - Written Assessment (SAQ)  — 12 open-ended KNOWLEDGE questions (K1–K12), aligned to the slides
-  - Practical Performance (PP) — 5 PRACTICAL tasks (LO1–LO5), aligned to the in-class activities
+  - Practical Performance (PP) — 7 PRACTICAL tasks (LO1–LO7), aligned to the in-class activities
 Each instrument is produced as a Question Paper and a matching Answer Key (4 DOCX total),
 all with the WSQ house cover page (same as the Lesson Plan / Learner Guide) + version control.
 Body: Arial 11.
@@ -40,8 +40,8 @@ for _cand in (os.path.join(REPO, ".claude/skills/tertiary-lesson-plan"),
 import prodoc  # cover page + version control + page numbers (same as LP/LG)
 
 # ─── EDIT PER COURSE ────────────────────────────────────────────────────────
-TITLE       = "Agentic AI Automation with n8n"   # <<Course Title>>
-COURSE_CODE = "TGS-2023035977"                    # <<Course Code, e.g. TGS-XXXXXXXXXX>>
+TITLE       = "No Code and Low Code Agentic AI Applications"   # <<Course Title>>
+COURSE_CODE = "TGS-2026062147"                                  # <<Course Code, e.g. TGS-XXXXXXXXXX>>
 # ────────────────────────────────────────────────────────────────────────────
 OUT   = os.path.join(REPO, "assessment")
 
@@ -57,7 +57,7 @@ def _logo(name):
 ORG_LOGO    = _logo("tertiary-infotech-logo.png")
 COURSE_LOGO = _logo("n8n-course-logo.png")
 
-Q_VER, A_VER = "v5", "v5"   # single standardised version across all four files
+Q_VER, A_VER = "v1", "v1"   # single standardised version across all four files
 BRAND = RGBColor(0x1F, 0x6F, 0xEB); DARK = RGBColor(0x11, 0x18, 0x27); GREY = RGBColor(0x55, 0x5B, 0x66)
 # Assessments carry the cover page only — no Document Version Control Record.
 
@@ -111,28 +111,30 @@ WRITTEN = [
    "Use the structured JSON response in downstream nodes."]),
  ("K7",
   "In a RAG system, text must be turned into a form that supports meaning-based (semantic) search before it can "
-  "be stored and retrieved.",
-  "Explain how embeddings and a vector store enable semantic retrieval in a RAG pipeline.",
+  "be stored and retrieved. The vector store must also be configured to match the embedding model.",
+  "Explain how embeddings and a vector store enable semantic retrieval in a RAG pipeline, and state the "
+  "dimension rule that makes ingestion succeed.",
   ["An embedding turns a chunk of text into a vector (a list of numbers capturing meaning).",
    "Similar meanings produce vectors that are close together.",
    "Vectors are saved in a vector store; the query is embedded and the nearest vectors are retrieved (e.g. cosine similarity).",
-   "Vector indexing keeps similarity search fast as the dataset grows."]),
+   "The embedding model's output dimension must equal the store's configured dimension "
+   "(e.g. OpenAI text-embedding-3-small = 1536; Gemini gemini-embedding-001 = 3072)."]),
  ("K8",
-  "You try to upload documents into a vector store for RAG, but the ingestion fails or the vectors are rejected. "
-  "The store was already initialised with a specific embedding configuration.",
-  "What is the most likely underlying issue to check first, and what is the rule?",
-  ["Embedding-dimension mismatch.",
-   "The embedding model's output dimension must equal the vector store's configured dimension.",
-   "e.g. OpenAI text-embedding-3-small = 1536 dimensions → the index/table/collection must be 1536.",
-   "Changing the embedding model changes the dimension (e.g. -3-large = 3072), so recreate the store to match."]),
- ("K9",
   "An in-memory vector store is simple but is lost when the workflow restarts. For production RAG you want a "
   "store that persists and scales.",
   "Name persistent vector databases you can use for RAG in n8n, and one distinguishing trait of each.",
   ["Pinecone — fully-managed SaaS; just create an index (dimension + metric), zero-ops.",
    "Supabase (pgvector) — Postgres + a vector extension; good if you already use Postgres.",
    "Qdrant — open-source; run via Docker or Qdrant Cloud for full control.",
-   "(All must match the embedding dimension, e.g. 1536.)"]),
+   "(All must match the embedding dimension, e.g. 1536 / 3072.)"]),
+ ("K9",
+  "Some workflows must start automatically the moment an event happens outside n8n — a form submission, a website "
+  "chat message, or a call from another application — rather than on a schedule or manual run.",
+  "What is the primary purpose of a Webhook in n8n, and what node pairs with it to reply to the caller?",
+  ["A Webhook is a URL that external systems call to trigger the workflow in real time.",
+   "Use cases: website chat, form submissions, payment/GitHub/Stripe events.",
+   "Pair it with a Respond to Webhook node to send a reply back to the caller.",
+   "Set Allowed Origins (CORS) = * so a browser page can call it."]),
  ("K10",
   "To make an AI agent trustworthy, you place safety checks around it so that unsafe input never reaches the "
   "agent and unsafe output never reaches the user.",
@@ -142,18 +144,27 @@ WRITTEN = [
    "Output / post-guardrail: an LLM checks every reply SAFE or LEAK before it reaches the user.",
    "It blocks salary figures, NRIC, credentials or system-instruction leaks; a blocked case returns a safe canned reply."]),
  ("K11",
-  "Some workflows must start automatically the moment an event happens outside n8n — a form submission, a website "
-  "chat message, or a call from another application — rather than on a schedule or manual run.",
-  "What is the primary purpose of a Webhook in n8n, and what node pairs with it to reply to the caller?",
-  ["A Webhook is a URL that external systems call to trigger the workflow in real time.",
-   "Use cases: website chat, form submissions, payment/GitHub/Stripe events.",
-   "Pair it with a Respond to Webhook node to send a reply back to the caller.",
-   "Set Allowed Origins (CORS) = * so a browser page can call it."]),
+  "Some agentic actions are too sensitive to fully automate — a leave approval, or a reply from a licensed "
+  "financial firm to a retail client. The workflow must pause for a person to decide, and the design must also "
+  "choose which steps the AI agent decides and which stay deterministic.",
+  "What is human-in-the-loop in an agentic workflow, how is it implemented in n8n, and give one example of a "
+  "decision that should stay deterministic rather than be given to the agent.",
+  ["Human-in-the-loop: the workflow pauses until a person approves or declines before it continues.",
+   "In n8n: Gmail/Outlook 'Send and Wait for Response' emails Approve/Decline buttons; an IF node routes on the decision.",
+   "The agent drafts/classifies, but nothing reaches the customer until a human approves (e.g. the client-rapport assistant).",
+   "Deterministic examples: trimming/normalising input, computing age from a date of birth, appending the audit-log row — "
+   "never trust the agent to log itself."]),
  ("K12",
-  "n8n lets you connect different Large Language Models (LLMs) through their APIs, depending on the use case, "
-  "performance needs and provider availability.",
-  "List three popular LLM providers commonly used with n8n for AI automation.",
-  ["OpenAI (GPT models)", "Google Gemini", "Anthropic Claude", "(others are available via API / OpenRouter)"]),
+  "Voice agent platforms split the work between the vendor and your n8n workflows in different ways, and "
+  "each split has its own security rules.",
+  "Contrast the ElevenLabs and Vapi (Custom LLM) voice-agent architectures used in this course, and state one "
+  "key security rule for each.",
+  ["ElevenLabs: the vendor runs the model and the voice; n8n mints a short-lived signed URL and serves the agent's "
+   "tool webhooks (e.g. check availability / book appointment).",
+   "Security: the xi-api-key stays in n8n (Header Auth); the browser only ever receives the signed URL.",
+   "Vapi Custom LLM: Vapi does speech-to-text and the voice, then calls YOUR n8n webhook as its model — n8n is the brain.",
+   "Security: the web page holds only the Vapi PUBLIC key (it can merely start calls); the private key never goes into a page.",
+   "Both vendors' SERVERS call n8n, so tool/model webhooks must be publicly reachable (n8n Cloud URL or a tunnel)."]),
 ]
 
 # ---------------------------------------------------------------- PRACTICAL (ACTIVITY-BASED)
@@ -190,17 +201,6 @@ PRACTICAL = [
    "Send the reply back (Telegram Send Message, or Respond to Webhook for the website).",
    "Save & Activate; test with a product question and confirm a grounded reply."]),
  ("Task 3", "LO3",
-  "FryTech wants staff to query internal documents (product manuals / IT-Support FAQ / policies) in natural "
-  "language. Build a Retrieval-Augmented Generation (RAG) workflow: users upload documents which are embedded "
-  "and stored in a vector store, and an AI agent retrieves the most relevant chunks and answers strictly from "
-  "them.",
-  "Show the screenshot of the n8n workflow in the box below",
-  ["Ingestion: an upload point → Embeddings → Vector Store (Insert) with a Default Data Loader (Activity 7a).",
-   "Upload a document (e.g. the IT-Support FAQ PDF) from the web uploader into the vector store.",
-   "Chat: an AI Agent with the Vector Store exposed as a retrieve-as-tool (knowledge_base) answers only from retrieved chunks (Activity 7a).",
-   "For persistence, ingest into a vector database — Supabase / Pinecone / Qdrant — matching the 1536 embedding dimension (Activity 7b).",
-   "Test: ask a question answerable only from the document; confirm a grounded answer."]),
- ("Task 4", "LO4",
   "FryTech must integrate with external systems. Build a workflow that either (a) uses a Webhook to receive data "
   "from an external web page and respond to it, or (b) uses an HTTP Request to query an external API (e.g. market "
   "or news data) and use the result. When run, show the data is received/queried correctly.",
@@ -209,16 +209,57 @@ PRACTICAL = [
    "Option B — HTTP Request (Activity 6): call an external API with method, headers and query parameters; store the API key in a credential.",
    "Use the returned JSON in downstream nodes (e.g. feed it to an AI Agent).",
    "Save & Activate; run it and show the collected/queried data in the execution."]),
+ ("Task 4", "LO4",
+  "FryTech wants staff to query internal documents (product manuals / IT-Support FAQ / policies) in natural "
+  "language. Build a Retrieval-Augmented Generation (RAG) workflow: users upload documents which are embedded "
+  "and stored in a vector store, and an AI agent retrieves the most relevant chunks and answers strictly from "
+  "them.",
+  "Show the screenshot of the n8n workflow in the box below",
+  ["Ingestion: an upload point → Embeddings → Vector Store (Insert) with a Default Data Loader (Activity 7a).",
+   "Upload a document (e.g. the IT-Support FAQ PDF) from the web uploader into the vector store.",
+   "Chat: an AI Agent with the Vector Store exposed as a retrieve-as-tool (knowledge_base) answers only from retrieved chunks (Activity 7a).",
+   "For persistence, ingest into a vector database — Supabase / Pinecone / Qdrant — matching the embedding dimension (Activity 7b).",
+   "Test: ask a question answerable only from the document; confirm a grounded answer."]),
  ("Task 5", "LO5",
-  "FryTech must secure its AI agent against prompt injection and data leaks. Build a guardrail that protects the "
-  "agent: an input guardrail that classifies each message ALLOW/BLOCK before the agent (and, optionally, an "
-  "output guardrail on the reply, or a human-in-the-loop approval step).",
+  "FryTech must secure its AI agent against prompt injection and data leaks, and sensitive actions must wait "
+  "for a manager's decision. Build a guarded workflow: an input guardrail that classifies each message "
+  "ALLOW/BLOCK before the agent, an output guardrail on the reply, and a human-in-the-loop approval step for a "
+  "sensitive action (e.g. issuing a refund or sending a customer reply).",
   "Show the screenshot of the n8n workflow in the box below",
   ["Add a Webhook → an LLM Chain 'Input Guardrail' that replies ALLOW or BLOCK (Activity 8c).",
    "Add an IF node on the result: BLOCK → Respond with a safety message; ALLOW → continue to the AI Agent.",
-   "Optionally add an 'Output Guardrail' LLM Chain (SAFE/LEAK) before Respond to Webhook.",
-   "Optionally add a human-in-the-loop approval (Gmail Send-and-Wait) for sensitive actions (Activity 8a).",
-   "Test: a normal question passes; 'ignore previous instructions…' is blocked."]),
+   "Add an 'Output Guardrail' LLM Chain (SAFE/LEAK) before Respond to Webhook (Activity 8c).",
+   "Add a human-in-the-loop approval — Gmail 'Send and Wait for Response' with Approve/Decline, then an IF on "
+   "the decision (Activity 8a / 8b).",
+   "Test: a normal question passes; 'ignore previous instructions…' is blocked; the sensitive action waits for the manager."]),
+ ("Task 6", "LO6",
+  "FryTech launches a distributor onboarding programme. Applications arrive from the company website and must "
+  "be screened automatically: check for an existing distributor record (duplicates), apply the eligibility "
+  "rules consistently, create the record, email the applicant the outcome — and keep an audit log of every "
+  "decision. Design and implement this onboarding agent, stating which steps the AI agent decides and which "
+  "stay deterministic.",
+  "Show the screenshot of the n8n workflow in the box below",
+  ["Front door: a Webhook (POST, CORS = *) from the website — or an n8n Form for the internal version (Activity 9).",
+   "Normalise the input with a Set node (trim, upper-case IDs, compute derived values) — deterministic (Activity 9).",
+   "AI Agent with tools: a Sheets lookup tool for duplicates, a Sheets append tool to create the record; the "
+   "eligibility rules live in the system message (Activity 9).",
+   "The agent decides APPROVE / REJECT / DUPLICATE / REVIEW and writes the applicant email copy.",
+   "Append the audit-log row with a plain Google Sheets node on every run — never let the agent log itself (Activity 9).",
+   "Respond to Webhook returns the decision to the page; test with a clean, a duplicate and an ineligible application."]),
+ ("Task 7", "LO7",
+  "FryTech wants a voice assistant for its customer hotline. Build a voice agent with ElevenLabs or Vapi, "
+  "connected to n8n: it must answer grounded questions about FryTech's products/policies (no invented answers) "
+  "and, for the ElevenLabs option, call at least one n8n tool webhook during the conversation (e.g. check a "
+  "service-appointment calendar).",
+  "Show the screenshot of the n8n workflow in the box below",
+  ["Option A — ElevenLabs (Activity 11): a web-call flow (Webhook → Get Signed URL with xi-api-key Header Auth → "
+   "Respond) plus a tools flow (check_availability / book_appointment webhooks → Google Calendar).",
+   "Upload the product/policy handbook PDF to the agent's Knowledge Base so answers are grounded.",
+   "Register the tool webhooks with PUBLIC n8n URLs; the browser only ever receives the signed URL.",
+   "Option B — Vapi Custom LLM (Activity 12): Webhook → AI Agent → OpenAI-shaped response; the assistant's model "
+   "URL points at your n8n webhook; the page holds only the PUBLIC key.",
+   "Ground the prompt in fixed FAQ topics with a fixed refusal for out-of-scope questions.",
+   "Test by voice: a grounded answer, an out-of-scope refusal, and (Option A) a tool execution in n8n during the call."]),
 ]
 
 # ---------------------------------------------------------------- doc helpers
@@ -368,7 +409,7 @@ def build_pp(answers):
     para(doc, f"Course Code: {COURSE_CODE}", size=11, color=GREY, align=WD_ALIGN_PARAGRAPH.CENTER, after=12)
     if not answers:
         # Page 2 — candidate information, instructions and grading; the problem begins on the next page.
-        candidate_block(doc); instructions(doc, "90 minutes")
+        candidate_block(doc); instructions(doc, "1 hour")
         grading(doc, "Candidate has successfully completed all PP tasks and can explain the overall "
                      "functions and features used to achieve them.")
         page_break(doc)

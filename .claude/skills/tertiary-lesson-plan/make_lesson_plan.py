@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Generate the 3-day Lesson Plan Word document for the WSQ course
-'Agentic AI Automation with n8n' (TGS-2023035977) — v2.0 revised flow."""
+"""Generate the 4-day Lesson Plan Word document for the WSQ course
+'No Code and Low Code Agentic AI Applications' (TGS-2026062147)."""
 
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -17,8 +17,8 @@ def _logo(name):
     return None
 
 # ─── EDIT PER COURSE ─────────────────────────────────────────────
-TITLE       = "Agentic AI Automation with n8n"   # <<Course Title>>
-COURSE_CODE = "TGS-2023035977"                    # <<Course Code, e.g. TGS-XXXXXXXXXX>>
+TITLE       = "No Code and Low Code Agentic AI Applications"   # <<Course Title>>
+COURSE_CODE = "TGS-2026062147"                                  # <<Course Code, e.g. TGS-XXXXXXXXXX>>
 # ─────────────────────────────────────────────────────────────────
 
 from docx import Document
@@ -29,19 +29,11 @@ from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
 LP_VERSIONS = [
-    ("1.0", "24 June 2026", "First version — 3-day lesson plan aligned to the agentic n8n course flow",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("2.0", "26 June 2026", "Renumbered Day 2 activities: Investment Advisor → Activity 5, Finance Advisor → "
-                             "Activity 6, RAG → Activity 7; updated Activity 8 to the integrated HR Service Portal "
-                             "(Leave Approval, Dashboard Data, AI Chatbot with Guardrails)",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("3.0", "1 July 2026", "Replaced Activity 7 with two new RAG labs — Activity 7a (RAG chatbot: web PDF upload "
-                            "→ vector store → Telegram Q&A) and Activity 7b (customer-support RAG agent across "
-                            "three vector databases: Supabase, Pinecone, Qdrant)",
-     "Tertiary Infotech Academy Pte Ltd"),
-    ("3.1", "1 July 2026", "Added a page-numbered Table of Contents; verified daily-schedule table borders and "
-                            "footer page numbers; aligned the Lesson Plan with the slides, Learner Guide and lab "
-                            "workflows (activities 1–8 + capstone)",
+    ("1.0", "17 July 2026", "First version — 4-day lesson plan for No Code and Low Code Agentic AI Applications "
+                            "(TGS-2026062147). Topics 1–4 (n8n fundamentals, AI agents, webhook & HTTP request, RAG) "
+                            "adapted from Agentic AI Automation with n8n; Topic 5 human-in-the-loop & guardrails; "
+                            "Topic 6 use cases of agentic AI (banking onboarding, client rapport); Topic 7 voice "
+                            "agents (ElevenLabs & Vapi); Topic 8 mini capstone project and presentation",
      "Tertiary Infotech Academy Pte Ltd"),
 ]
 
@@ -83,7 +75,7 @@ def add_heading(text, size=15, color=BRAND, space_before=12, space_after=6):
 
 # ============================ COVER + FRONT MATTER ============================
 prodoc.style_headings(doc)
-prodoc.add_cover_page(doc, "LESSON PLAN", TITLE, "3.1", course_code=COURSE_CODE,
+prodoc.add_cover_page(doc, "LESSON PLAN", TITLE, "1.0", course_code=COURSE_CODE,
     org_logo=_logo("tertiary-infotech-logo.png"),
     course_logo=_logo("n8n-course-logo.png"))
 prodoc.add_version_control(doc, LP_VERSIONS)
@@ -93,14 +85,15 @@ prodoc.add_toc(doc, levels="1-2")
 info = [
     ("Course Title", TITLE),
     ("Course Code", COURSE_CODE),
-    ("Duration", "3 Days (24 training hours)"),
+    ("Duration", "4 Days (32 training hours)"),
     ("Daily Schedule", "9:30 AM – 6:30 PM (8 training hours/day, excluding lunch)"),
     ("Lunch Break", "1:00 PM – 2:00 PM (1 hour)"),
     ("Breaks", "Short tea breaks are scheduled within each day's training hours"),
     ("Delivery Mode", "Instructor-led, hands-on labs with group work and presentations"),
     ("Prerequisites", "Basic computer literacy; a Google/Gmail account; no coding experience required"),
-    ("Tools & Accounts", "n8n (trial + local Docker), OpenAI & Gemini API keys, Telegram, "
-                         "Gmail/Outlook, Google Sheets, Twelve Data & NewsAPI, Claude Code"),
+    ("Tools & Accounts", "n8n (cloud trial + local Docker), OpenAI & Gemini API keys, Telegram, "
+                         "Gmail/Outlook, Google Sheets, Google Calendar, Twelve Data & NewsAPI, "
+                         "ElevenLabs, Vapi"),
 ]
 tbl = doc.add_table(rows=0, cols=2); tbl.style = "Table Grid"; tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
 for k, v in info:
@@ -113,11 +106,13 @@ for row in tbl.rows:
 # ============================ OVERVIEW ============================
 add_heading("Course Overview")
 doc.add_paragraph(
-    "This 3-day hands-on course teaches participants to design, build and secure agentic AI "
-    "automations with n8n. Learners set up n8n (trial and local Docker), automate forms and email, "
-    "store data in Data Tables and external spreadsheets, build Telegram-triggered AI agents, integrate "
-    "webhooks and external APIs, add Retrieval-Augmented Generation (RAG), and apply human-in-the-loop "
-    "guardrails — culminating in a mini capstone project that is presented and assessed."
+    "This 4-day hands-on course teaches participants to design, build and secure agentic AI "
+    "applications on no-code / low-code platforms. Learners set up n8n (cloud trial and local Docker), "
+    "automate forms and email, store data in Data Tables and spreadsheets, build Telegram-triggered AI "
+    "agents, integrate webhooks and external APIs, add Retrieval-Augmented Generation (RAG), apply "
+    "human-in-the-loop and guardrail patterns, implement two real business use cases (retail banking "
+    "onboarding and a client rapport assistant with human handover), and build voice agents with "
+    "ElevenLabs and Vapi — culminating in a mini capstone project that is presented and assessed."
 )
 
 # ============================ LEARNING OUTCOMES ============================
@@ -132,6 +127,8 @@ for o in [
     "Integrate external services through APIs and HTTP requests, including real-time market and news data.",
     "Implement Retrieval-Augmented Generation (RAG) and route an agent between multiple data sources.",
     "Apply human-in-the-loop and guardrail patterns to make AI automations safe and reliable.",
+    "Apply agentic AI to business use cases — customer onboarding and client communications with human oversight.",
+    "Build voice agents with ElevenLabs and Vapi connected to n8n workflows and real calendars.",
     "Plan, build, present and self-assess an end-to-end mini capstone automation project.",
 ]:
     p = doc.add_paragraph(o, style="List Bullet"); p.paragraph_format.space_after = Pt(2)
@@ -169,12 +166,12 @@ def session_label(text):
     r = p.add_run(text); r.bold = True; r.font.size = Pt(11); r.font.color.rgb = BRAND
 
 # ----------------------------- DAY 1 -----------------------------
-day_header("Day 1", "Workflow Automation with n8n  ·  AI Agents")
+day_header("Day 1", "Fundamentals of n8n  ·  AI Agents")
 
 session_label("Morning Session  ·  9:30 AM – 1:00 PM")
 schedule_table([
     ("9:30 – 9:45",  f"Welcome, course objectives & overview ({COURSE_CODE})", 15, "normal"),
-    ("9:45 – 12:25", "Topic 1: Workflow Automation with n8n", None, "topic"),
+    ("9:45 – 12:25", "Topic 1: Fundamentals of n8n", None, "topic"),
     ("9:45 – 10:05", "Overview of n8n", 20, "normal"),
     ("10:05 – 10:35","Set up n8n — create trial accounts (15 learners) and install locally with Docker Compose", 30, "normal"),
     ("10:35 – 10:50","Explore the n8n UI", 15, "normal"),
@@ -198,17 +195,16 @@ schedule_table([
 ])
 
 # ----------------------------- DAY 2 -----------------------------
-day_header("Day 2", "Webhooks  ·  APIs & HTTP Requests  ·  RAG")
+day_header("Day 2", "Webhook and HTTP Request  ·  RAG")
 
 session_label("Morning Session  ·  9:30 AM – 1:00 PM")
 schedule_table([
     ("9:30 – 9:45",  "Day 1 recap & Day 2 objectives", 15, "normal"),
-    ("9:45 – 12:10", "Topic 3: Webhooks", None, "topic"),
+    ("9:45 – 1:00",  "Topic 3: Webhook and HTTP Request", None, "topic"),
     ("9:45 – 10:15", "Overview of Webhooks — use cases and external triggers", 30, "normal"),
     ("10:15 – 11:35","Activity 5: Website chatbot via webhook — follow the n8n Investment Advisor reference site (CORS, Webhook trigger, Respond to Webhook, AI Agent)", 80, "normal"),
     ("11:35 – 11:50","Tea Break", 15, "break"),
     ("11:50 – 12:10","Selected learners present their live website and chatbot", 20, "normal"),
-    ("12:10 – 1:00", "Topic 4: APIs and HTTP Requests", None, "topic"),
     ("12:10 – 12:40","Overview of APIs and HTTP Requests — methods, headers, query parameters, credentials", 30, "normal"),
     ("12:40 – 1:00", "Activity 6 setup: sign up for Twelve Data and NewsAPI; copy API keys; import the workflow", 20, "normal"),
 ])
@@ -216,23 +212,23 @@ schedule_table([("1:00 – 2:00", "Lunch Break", 60, "break")])
 
 session_label("Afternoon Session  ·  2:00 PM – 6:30 PM")
 schedule_table([
-    ("2:00 – 4:00",  "Topic 4 (cont.): APIs and HTTP Requests", None, "topic"),
+    ("2:00 – 3:20",  "Topic 3 (cont.): Webhook and HTTP Request", None, "topic"),
     ("2:00 – 3:20",  "Activity 6 (cont.): Configure Twelve Data and NewsAPI keys; build the Finance API → Telegram day-trading agent (candles1min / candles15min / candles1hr + news, AI Agent, Telegram reply)", 80, "normal"),
+    ("3:20 – 6:30",  "Topic 4: Retrieval-Augmented Generation (RAG)", None, "topic"),
     ("3:20 – 4:00",  "Overview of Retrieval-Augmented Generation (RAG) — Tokenization, Embeddings, Vector Stores", 40, "normal"),
     ("4:00 – 4:15",  "Tea Break", 15, "break"),
-    ("4:15 – 6:30",  "Topic 5: Retrieval-Augmented Generation (RAG)", None, "topic"),
     ("4:15 – 4:45",  "RAG ingestion walkthrough — the upload → embed → vector-store → retrieve loop; set up OpenAI / Gemini embedding credentials", 30, "normal"),
     ("4:45 – 6:05",  "Activity 7a: RAG chatbot — upload an IT-Support FAQ PDF from a web page into a vector store, then ask the Telegram bot (Gemini embeddings + knowledge_base tool).  Activity 7b: customer-support RAG agent for a training center, ingesting 20 course brochures across three vector databases (Supabase pgvector, Pinecone, Qdrant) answering via a website chat widget", 80, "normal"),
     ("6:05 – 6:30",  "Day 2 recap, Q&A and wrap-up", 25, "normal"),
 ])
 
 # ----------------------------- DAY 3 -----------------------------
-day_header("Day 3", "Security & Guardrails  ·  Mini Capstone Project")
+day_header("Day 3", "Human in the Loop and Guardrails  ·  Use Cases of Agentic AI")
 
 session_label("Morning Session  ·  9:30 AM – 1:00 PM")
 schedule_table([
     ("9:30 – 9:45",  "Day 2 recap & Day 3 objectives", 15, "normal"),
-    ("9:45 – 1:00",  "Topic 6: Security and Guardrails — HR Service Portal", None, "topic"),
+    ("9:45 – 1:00",  "Topic 5: Human in the Loop and Guardrails — HR Service Portal", None, "topic"),
     ("9:45 – 10:25", "Overview of Human-in-the-Loop and the HR Service Portal — three coordinated n8n workflows behind one web page (Leave Application, Dashboard, AI Chatbot)", 40, "normal"),
     ("10:25 – 11:25","Activity 8a: Leave Application with Human-in-the-Loop — webhook receives leave request, emails manager an Approve/Reject button (Send and Wait for Response), emails employee the outcome", 60, "normal"),
     ("11:25 – 11:40","Tea Break", 15, "break"),
@@ -244,12 +240,40 @@ schedule_table([("1:00 – 2:00", "Lunch Break", 60, "break")])
 
 session_label("Afternoon Session  ·  2:00 PM – 6:30 PM")
 schedule_table([
-    ("2:00 – 6:30",  "Topic 7: Mini Capstone Project", None, "topic"),
-    ("2:00 – 2:30",  "Capstone briefing — requirements, scope and assessment criteria", 30, "normal"),
-    ("2:30 – 4:15",  "Mini capstone build (supervised lab time)", 105, "normal"),
+    ("2:00 – 6:30",  "Topic 6: Use Cases of Agentic AI", None, "topic"),
+    ("2:00 – 2:20",  "Overview — agentic AI in the workplace; the 4-step problem-solving framework; agent decisions vs deterministic steps", 20, "normal"),
+    ("2:20 – 2:55",  "Activity 9 Part A (group): retail banking onboarding — problem definition, root cause analysis, solution ideation (Marina Trust Bank)", 35, "normal"),
+    ("2:55 – 4:15",  "Activity 9 Part B: build the onboarding AI Agent (duplicate check, KYC screening, eligibility rules, customer record, email) — form version, then the bank-website webhook version", 80, "normal"),
     ("4:15 – 4:30",  "Tea Break", 15, "break"),
-    ("4:30 – 5:45",  "Presentation of mini capstone projects", 75, "normal"),
-    ("5:45 – 6:30",  "Assessment and course closing", 45, "normal"),
+    ("4:30 – 5:45",  "Activity 10: client rapport assistant with human handover (Meridian Asset Management) — agent drafts a non-advisory reply; a relationship manager approves or declines before anything is sent; three-tab audit trail", 75, "normal"),
+    ("5:45 – 6:05",  "Selected learners present their use-case builds", 20, "normal"),
+    ("6:05 – 6:30",  "Day 3 recap, Q&A and wrap-up", 25, "normal"),
+])
+
+# ----------------------------- DAY 4 -----------------------------
+day_header("Day 4", "Voice Agents  ·  Mini Capstone Project and Presentation")
+
+session_label("Morning Session  ·  9:30 AM – 1:00 PM")
+schedule_table([
+    ("9:30 – 9:45",  "Day 3 recap & Day 4 objectives", 15, "normal"),
+    ("9:45 – 1:00",  "Topic 7: Voice Agents", None, "topic"),
+    ("9:45 – 10:15", "Overview of Voice Agents — ElevenLabs vs Vapi architectures; signed URLs; public vs private keys; tool webhooks", 30, "normal"),
+    ("10:15 – 12:15","Activity 11: Voice booking agent with ElevenLabs (GG Hair Salon) — signed-URL flow, Google Calendar tool webhooks, knowledge-base grounding, end-to-end voice booking", 120, "normal"),
+    ("12:15 – 12:30","Tea Break", 15, "break"),
+    ("12:30 – 1:00", "Activity 12 setup: import the Vapi Custom-LLM flow, prove the webhook with curl, read the guardrail prompt", 30, "normal"),
+])
+schedule_table([("1:00 – 2:00", "Lunch Break", 60, "break")])
+
+session_label("Afternoon Session  ·  2:00 PM – 6:30 PM")
+schedule_table([
+    ("2:00 – 3:00",  "Topic 7 (cont.): Voice Agents", None, "topic"),
+    ("2:00 – 3:00",  "Activity 12 (cont.): grounded FAQ voice agent with Vapi (MediRefill) — create the assistant, wire the public key, run the graded calls (grounded answer, medical refusal, emergency escalation)", 60, "normal"),
+    ("3:00 – 6:30",  "Topic 8: Mini Capstone Project and Presentation", None, "topic"),
+    ("3:00 – 3:20",  "Capstone briefing — requirements, scope and assessment criteria", 20, "normal"),
+    ("3:20 – 4:35",  "Mini capstone build (supervised lab time)", 75, "normal"),
+    ("4:35 – 4:50",  "Tea Break", 15, "break"),
+    ("4:50 – 5:45",  "Presentation of mini capstone projects", 55, "normal"),
+    ("5:45 – 6:30",  "Assessment (WA SAQ + PP briefing) and course closing", 45, "normal"),
 ])
 
 # ============================ RESOURCES ============================
@@ -261,6 +285,8 @@ res = [
     ("Finance Data API — Twelve Data", "https://twelvedata.com/login"),
     ("News API — NewsAPI", "https://newsapi.org/"),
     ("LLM API keys", "OpenAI API key & Google Gemini API key (provided to learners)"),
+    ("Voice — ElevenLabs", "https://elevenlabs.io/ (Conversational AI agent + API key)"),
+    ("Voice — Vapi", "https://vapi.ai/ (assistant + public key)"),
     ("Local n8n", "Docker Compose self-hosted install (see Learner Guide)"),
 ]
 rt = doc.add_table(rows=0, cols=2); rt.style = "Table Grid"; rt.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -274,10 +300,11 @@ for row in rt.rows:
 # ============================ ASSESSMENT ============================
 add_heading("Assessment", space_before=14)
 doc.add_paragraph(
-    "Participants are assessed through their hands-on activities across the three days and a mini "
-    "capstone project on Day 3. The capstone is presented to the class and evaluated against the "
-    "course learning outcomes — workflow design, AI agent integration, webhook and API use, "
-    "Retrieval-Augmented Generation, and the application of security guardrails."
+    "Participants are assessed through a Written Assessment (SAQ, 1 hour) and a Practical "
+    "Performance assessment (1 hour), plus hands-on activities across the four days and a mini "
+    "capstone project presented on Day 4. Work is evaluated against the course learning outcomes — "
+    "workflow design, AI agent integration, webhook and API use, Retrieval-Augmented Generation, "
+    "human-in-the-loop and guardrails, business use cases, and voice agents."
 )
 
 # ============================ FOOTER (page numbers) ============================
@@ -292,7 +319,8 @@ print("Saved:", OUT)
 days = {
     "Day 1": [15,20,30,15,20,25,50,35] + [40,40,15,30,45,75,25],
     "Day 2": [15,30,80,15,20,30,20] + [80,40,15,30,80,25],
-    "Day 3": [15,40,60,15,20,25,35] + [30,105,15,75,45],
+    "Day 3": [15,40,60,15,20,25,35] + [20,35,80,15,75,20,25],
+    "Day 4": [15,30,120,15,30] + [60,20,75,15,55,45],
 }
 for d, mins in days.items():
     total = sum(mins)

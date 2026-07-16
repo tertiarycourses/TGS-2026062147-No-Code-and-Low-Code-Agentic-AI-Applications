@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Highly professional 3-day course deck (150-200 slides): courseware/n8n-slides.pptx
-Admin front matter + full n8n key concepts (mined from the reference deck) +
-per-activity overview, workflow screenshot and step-by-step slides + breaks."""
+"""Highly professional 4-day course deck: No Code and Low Code Agentic AI Applications.
+Admin front matter + full n8n key concepts + per-activity overview, workflow screenshot
+and step-by-step slides + breaks. Every slide gets a fade transition (house rule)."""
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
@@ -16,10 +16,11 @@ NAVY=RGBColor(0x0B,0x12,0x20); BLUE=RGBColor(0x1F,0x6F,0xEB); TEAL=RGBColor(0x10
 AMBER=RGBColor(0xF5,0x9E,0x0B); INK=RGBColor(0x16,0x1B,0x26); GREY=RGBColor(0x5B,0x63,0x72)
 LIGHT=RGBColor(0xF5,0xF8,0xFC); WHITE=RGBColor(0xFF,0xFF,0xFF); LINE=RGBColor(0xE2,0xE8,0xF0)
 VIOLET=RGBColor(0x7C,0x3A,0xED)
-VERSION="v45"; VERSION_DATE="3 July 2026"
+VERSION="v1"; VERSION_DATE="17 July 2026"
 # ─── EDIT PER COURSE ─────────────────────────────────────────────
-TITLE       = "Agentic AI Automation with n8n"   # <<Course Title>>
-COURSE_CODE = "TGS-2023035977"                    # <<Course Code, e.g. TGS-XXXXXXXXXX>>
+TITLE       = "No Code and Low Code Agentic AI Applications"   # <<Course Title>>
+COURSE_CODE = "TGS-2026062147"                                  # <<Course Code, e.g. TGS-XXXXXXXXXX>>
+REPO_URL    = "github.com/tertiarycourses/TGS-2026062147-No-Code-and-Low-Code-Agentic-AI-Applications"
 # ─────────────────────────────────────────────────────────────────
 
 prs=Presentation(); prs.slide_width=Inches(13.333); prs.slide_height=Inches(7.5)
@@ -66,7 +67,9 @@ def head(s,title,kicker=None,kcolor=BLUE):
     y=Inches(0.55)
     if kicker:
         txt(s,Inches(0.8),Inches(0.5),Inches(11.8),Inches(0.34),[[(kicker,14,kcolor,True)]]); y=Inches(0.82)
-    txt(s,Inches(0.8),y,Inches(12.0),Inches(0.85),[[(title,29,INK,True)]])
+    # scale the title font down for long titles so they stay on ONE line above the divider rule
+    fs=29 if len(title)<=48 else (24 if len(title)<=60 else 20)
+    txt(s,Inches(0.8),y,Inches(12.0),Inches(0.85),[[(title,fs,INK,True)]])
     rect(s,Inches(0.8),Inches(1.55),Inches(12.0),Pt(2),LINE)
 
 ASSETS=f"{REPO}/.claude/skills/tertiary-course-slides/assets"
@@ -89,8 +92,8 @@ def cover():
     if _crs: s.shapes.add_picture(_crs,Inches(11.4),Inches(0.72),height=Inches(1.0))
     txt(s,Inches(0.9),Inches(2.3),Inches(12),Inches(0.6),[[("LEARNER GUIDE  ·  COURSE SLIDES",16,BLUE,True)]])
     txt(s,Inches(0.9),Inches(2.9),Inches(12.0),Inches(1.6),[[(TITLE,46,INK,True)]])
-    rect(s,Inches(0.92),Inches(4.3),Inches(2.4),Inches(0.06),TEAL)
-    txt(s,Inches(0.9),Inches(4.65),Inches(12),Inches(1.4),
+    rect(s,Inches(0.92),Inches(4.45),Inches(2.4),Inches(0.06),TEAL)
+    txt(s,Inches(0.9),Inches(4.78),Inches(12),Inches(1.4),
         [[(f"WSQ Course Code: {COURSE_CODE}",16,GREY,False)],
          [("Conducted by Tertiary Infotech Academy Pte Ltd  ·  UEN 201200696W",14,GREY,False)],
          [(f"Version {VERSION}  ·  {VERSION_DATE}",14,BLUE,True)]],space=6)
@@ -286,27 +289,33 @@ content("LMS / TMS",[
  "Portal: https://lms-tms.tertiaryinfotech.com",
  "Download the slides and Learner Guide for reference during the open-book assessment."],kicker="COURSE PORTAL")
 tile_grid("Download the Course Flows (GitHub)",[
- "Open the course repo: github.com/tertiarycourses/TGS-2023035977-Agentic-AI-Automation-with-n8n",
+ f"Open the course repo: {REPO_URL}",
  "Code ▾ → Download ZIP (or git clone) — all workflows are in the labs/ folder.",
  "In n8n: Workflows → Add workflow → ⋯ → Import from File → pick the activity .json.",
  "After importing, re-select YOUR OWN credentials on each node, then Save & Publish."],
  kicker="GET THE WORKFLOWS",cols=1,size=15)
-two_col("Lesson Plan — 3 Days, 8 hours/day",[
- ("Day 1 — Workflow Automation + AI Agents",0),("Topic 1: n8n basics + Activities 1, 2, 3a, 3b",1),
- ("Topic 2: AI Agents — Activities 4a, 4b",1),("Day 2 — Webhooks + API",0),
- ("Topic 3: Webhooks — Activity 5",1),("Topic 4: API & HTTP — Activity 6",1)],
- [("Day 3 — RAG, Security & Capstone",0),("Topic 5: RAG — Activities 7a, 7b",1),
- ("Topic 6: Security + Guardrails — Activity 8",1),
- ("Topic 7: Mini Capstone + presentations",1),("Daily timing",0),
- ("9:30am–6:30pm · 1-hour lunch",1),("Short tea breaks within each day",1)],
- kicker="SCHEDULE",lhead="Days 1–2",rhead="Day 3 & timing")
+two_col("Lesson Plan — 4 Days, 8 hours/day",[
+ ("Day 1 — n8n Fundamentals + AI Agents",0),("Topic 1: Fundamentals of n8n — Activities 1, 2, 3a, 3b",1),
+ ("Topic 2: AI Agents — Activities 4a, 4b",1),
+ ("Day 2 — Webhooks, APIs + RAG",0),
+ ("Topic 3: Webhook and HTTP Request — Activities 5, 6",1),("Topic 4: RAG — Activities 7a, 7b",1)],
+ [("Day 3 — Human in the Loop + Use Cases",0),
+ ("Topic 5: Human in the Loop and Guardrails — Activity 8",1),
+ ("Topic 6: Use Cases of Agentic AI — Activities 9, 10",1),
+ ("Day 4 — Voice Agents + Capstone",0),
+ ("Topic 7: Voice Agents — Activities 11, 12",1),
+ ("Topic 8: Mini Capstone Project and Presentation",1),
+ ("Daily timing: 9:30am–6:30pm · 1-hour lunch · tea breaks",1)],
+ kicker="SCHEDULE",lhead="Days 1–2",rhead="Days 3–4 & timing")
 tile_grid("Learning Outcomes",[
  "LO1: Build automated workflows in n8n using triggers, actions, nodes and flows.",
  "LO2: Design AI agents with LLMs, memory and tools, triggered from chat / Telegram.",
- "LO3: Apply Retrieval-Augmented Generation (RAG) to ground agents in your documents.",
- "LO4: Integrate external systems via webhooks, APIs and HTTP requests.",
- "LO5: Apply human-in-the-loop and guardrails to secure agentic automations."],
- kicker="WHAT YOU'LL ACHIEVE",cols=1,size=15)
+ "LO3: Integrate external systems via webhooks, APIs and HTTP requests.",
+ "LO4: Apply Retrieval-Augmented Generation (RAG) to ground agents in your documents.",
+ "LO5: Apply human-in-the-loop and guardrails to secure agentic automations.",
+ "LO6: Apply agentic AI to business use cases — onboarding and client communications.",
+ "LO7: Build voice agents with ElevenLabs and Vapi connected to n8n workflows."],
+ kicker="WHAT YOU'LL ACHIEVE",cols=1,size=14)
 content("Briefing for Assessment",[
  "Place phones and other materials under the table or on the floor.",
  "No photos or recording of assessment scripts.","No discussion during the assessment.",
@@ -315,7 +324,7 @@ content("Briefing for Assessment",[
 content("Assessment",[
  "Written Assessment (SAQ) — 1 hour.","Practical Performance (PP) — 1 hour.",
  "Format: Open Book — slides, Learner Guide and approved materials only.",
- "A mini capstone project is presented on Day 3.","An appeal process is available if required."],kicker="FINAL ASSESSMENT")
+ "A mini capstone project is presented on Day 4.","An appeal process is available if required."],kicker="FINAL ASSESSMENT")
 flow_h("Assessment Flow",[
  "TRAQOM survey — scan the QR code on the LMS",
  "Assessment digital attendance — scan the SSG QR",
@@ -323,8 +332,8 @@ flow_h("Assessment Flow",[
  "Submit your answers on the LMS",
  "Sign the Assessment Summary Record"],kicker="ON ASSESSMENT DAY")
 
-# ---------- TOPIC 1: WORKFLOW AUTOMATION ----------
-section("TOPIC 1","Workflow Automation with n8n","01","Triggers · Actions · Nodes · Flows")
+# ---------- TOPIC 1: FUNDAMENTALS OF n8n ----------
+section("TOPIC 1","Fundamentals of n8n","01","Triggers · Actions · Nodes · Flows")
 content("What is n8n?",[
  "A workflow automation platform — connect apps and services with little or no code.",
  "Visual editor: drag nodes onto a canvas and wire them together.",
@@ -466,7 +475,7 @@ def activity_block(a):
     for i,st in enumerate(steps,1): step_slide(a["kicker"],a["title"],i,total,st)
     if a.get("test"): test_slide(a["title"],a["test"],a["kicker"])
 
-K1="TOPIC 1 · WORKFLOW AUTOMATION"
+K1="TOPIC 1 · FUNDAMENTALS OF n8n"
 activity_block(dict(tag="ACT 1",title="Activity 1 — Flyer with QR Code (Form → Email)",kicker=K1,
  desc="Collect a visitor's details with an n8n Form and email them to an admin, then turn the form URL into a QR code on an event flyer (group activity).",
  build="Form Trigger  →  Gmail (Send)",nodes="formTrigger, gmail",
@@ -587,10 +596,10 @@ activity_block(dict(tag="ACT 4b",title="Activity 4b — Telegram Agent + Data Ta
 content("End of Day 1 — Recap",[
  "You built form automations, conditional logic and data storage.",
  "You created a Telegram AI agent with memory and a Data Table tool.",
- "Tomorrow: Webhooks, external APIs, RAG, and security guardrails."],kicker="WRAP-UP")
+ "Tomorrow: Webhooks, HTTP requests / external APIs, and RAG."],kicker="WRAP-UP")
 
-# ---------- TOPIC 3: WEBHOOKS ----------
-section("TOPIC 3","Webhooks","03","External triggers for your workflows")
+# ---------- TOPIC 3: WEBHOOK AND HTTP REQUEST ----------
+section("TOPIC 3","Webhook and HTTP Request","03","External triggers · APIs · Live data")
 content("What is a Webhook?",[
  "A Webhook is a URL that external systems call to trigger your workflow.",
  "Use cases: website chat, form submissions, payments, app notifications.",
@@ -623,7 +632,7 @@ content("Webhook Authentication",[
  "Basic Auth — username & password.",
  "Header Auth — a secret key in a request header.",
  "JWT — signed tokens for stronger security."],kicker="SECURING WEBHOOKS")
-K4="TOPIC 3 · WEBHOOKS"
+K4="TOPIC 3 · WEBHOOK & HTTP REQUEST"
 activity_block(dict(tag="ACT 5",title="Activity 5 — Website Chatbot via Webhook (Investment Advisor)",kicker=K4,
  desc="Expose an AI agent to a public website via a Webhook. The Investment Advisor page has an enquiry form and a floating chatbot; both post to one n8n webhook.",
  build="Webhook  →  AI Agent  →  Respond to Webhook  (+ email the advisor)",nodes="webhook, agent, respondToWebhook, gmail",
@@ -643,8 +652,7 @@ website_slide("Activity 5 — The Investment Advisor Website",IMG("labs/activity
   "Set the webhook URL in script.js, then open index.html."],kicker="ACT 5 · THE WEBSITE")
 brk("Tea Break","15 minutes",TEAL)
 
-# ---------- TOPIC 4: API AND HTTP REQUEST ----------
-section("TOPIC 4","API and HTTP Request","04","Pull live data from external services")
+# ---------- TOPIC 3 (cont.): API AND HTTP REQUEST ----------
 content("What is an API?",[
  "An API lets your workflow request data from another service over HTTP.",
  "You send a request; the service sends back a response (usually JSON).",
@@ -678,7 +686,7 @@ content("HTTP Request Node",[
 img_slide("HTTP Request Node",IMG(".claude/skills/tertiary-course-slides/assets/n8n-http-request.png"),
  "HTTP Request node — makes an HTTP request and returns the response data",
  kicker="IN n8n")
-K5="TOPIC 4 · API & HTTP"
+K5="TOPIC 3 · API & HTTP"
 website_slide("Twelve Data",IMG(".claude/skills/tertiary-course-slides/assets/site-twelvedata.png"),
  ["Twelve Data provides live stock / forex / crypto market data.","Sign up (free Basic plan), then Account -> API Keys.","Paste the apikey into the 3 'candles' HTTP nodes."],kicker="MARKET DATA API")
 website_slide("NewsAPI",IMG(".claude/skills/tertiary-course-slides/assets/site-newsapi.png"),
@@ -706,14 +714,10 @@ website_slide("Activity 6 — The Stock Analysis Dashboard",IMG("labs/activity6-
   "Quote stats (price, change, OHLC, volume, 52-week range) from Twelve Data.",
   "A floating Telegram chat widget opens the AI day-trading agent.",
   "Save your Twelve Data key + bot username in the Settings panel."],kicker="ACT 6 · THE WEBSITE")
-content("End of Day 2 — Recap",[
- "You exposed an AI agent to a public website via a webhook.",
- "You pulled live market + news data through APIs into a Telegram agent.",
- "Tomorrow: RAG, security guardrails, and the mini capstone."],kicker="WRAP-UP")
 brk("Lunch Break","1 hour",AMBER)
 
-# ---------- TOPIC 5: RAG ----------
-section("TOPIC 5","Retrieval-Augmented Generation (RAG)","05","Tokenization · Embeddings · Vector Stores")
+# ---------- TOPIC 4: RAG ----------
+section("TOPIC 4","Retrieval-Augmented Generation (RAG)","04","Tokenization · Embeddings · Vector Stores")
 content("What is RAG?",[
  "RAG lets an agent answer from YOUR documents, not just its training data.",
  "Documents are split, embedded and stored; relevant chunks are retrieved per question.",
@@ -728,8 +732,8 @@ content("Vector Database",[
  "Those chunks are given to the LLM as context to answer."],kicker="VECTOR STORE")
 img_slide("How RAG Works",IMG(".claude/skills/tertiary-course-slides/assets/rag-flow.png"),
           "User → Prompt → Data Retrieval (search/retrieve over your data sources) → Generator → Response",
-          kicker="TOPIC 5 · RAG")
-K3="TOPIC 5 · RAG"
+          kicker="TOPIC 4 · RAG")
+K3="TOPIC 4 · RAG"
 # ===== Activity 7a — RAG Chatbot: upload a PDF on the web, ask in Telegram =====
 activity_block(dict(tag="ACT 7a",title="Activity 7a — RAG Chatbot: Upload a PDF, Ask in Telegram",kicker=K3,
  desc="Build the full RAG loop with no-code blocks. A web page extracts the text from a PDF (your IT-Support FAQ) and uploads it to n8n, which embeds it into a vector store. A Telegram bot then answers questions using only that document.",
@@ -800,26 +804,21 @@ content("Vector Databases — Quick Comparison",[
  "Pinecone: managed SaaS · just create an index · zero-ops · scales fast.",
  "Qdrant: open-source · Docker or Qdrant Cloud · full control / self-hosted.",
  "Match the store's dimension to the embedding model (OpenAI 1536 / Gemini 3072) — swap the store, keep the RAG flow."],kicker="ACT 7b · RECAP")
-brk("Lunch Break","1 hour",AMBER)
+content("End of Day 2 — Recap",[
+ "You exposed an AI agent to a public website via a webhook.",
+ "You pulled live market + news data through APIs into a Telegram agent.",
+ "You grounded agents in your own documents with RAG and vector databases.",
+ "Tomorrow: human-in-the-loop, guardrails, and real business use cases."],kicker="WRAP-UP")
 
-# ---------- TOPIC 6: SECURITY ----------
-section("TOPIC 6","Security and Guardrails","06","Human-in-the-loop · Pre/Post guardrails")
-K6="TOPIC 6 · SECURITY"
-activity_block(dict(tag="ACT 8a",title="Activity 8a — Dashboard Data (Leave Balance & History)",kicker=K6,
- desc="Build a GET webhook that powers the HR portal's Dashboard tab — returning a staff member's leave balance and recent application history as JSON to the browser.",
- build="GET Webhook  →  Code (build data)  →  Respond to Webhook",nodes="webhook, code, respondToWebhook",
- img="labs/activity8-guardrails/Activity8 - Dashboard Data (Leave Balance & History).png",
- cap="Webhook → Code → Respond JSON to the HR portal",
- steps=["Add a Webhook node: set Method = GET, Path = hr-dashboard, Allowed Origins = *. Activate the workflow and copy the Production URL — paste it into the HR portal Settings tab.",
-   "Add a Code node (JavaScript). Read the ?email= query parameter from $json.query.email. Build and return a leave-data object with annual and medical leave balance plus a list of recent applications.",
-   "Add a Respond to Webhook node: set respondWith = JSON and responseBody = {{ $json }}. Save and keep the workflow Active."],
- test="Open index.html → Dashboard tab. Enter your staff email and click Refresh. Your leave balance and recent history should load from the n8n webhook."))
+# ---------- TOPIC 5: HUMAN IN THE LOOP AND GUARDRAILS ----------
+section("TOPIC 5","Human in the Loop and Guardrails","05","Human-in-the-loop · Pre/Post guardrails")
+K6="TOPIC 5 · HITL & GUARDRAILS"
 content("Human in the Loop",[
  "Some actions are too sensitive to automate without oversight — approvals, financial decisions.",
  "A human-in-the-loop step pauses the workflow until a person Approves or Declines.",
  "n8n's Gmail (Send and Wait for Response) sends an email with Approve / Decline buttons.",
  "The workflow resumes only after the manager clicks a button in the email."],kicker="CONCEPT")
-activity_block(dict(tag="ACT 8b",title="Activity 8b — Leave Application & Manager Approval (Human-in-the-Loop)",kicker=K6,
+activity_block(dict(tag="ACT 8a",title="Activity 8a — Leave Application & Manager Approval (Human-in-the-Loop)",kicker=K6,
  desc="Automate the leave process: the employee submits via the HR portal, the manager gets an email with Approve/Decline buttons, and the employee is notified of the outcome.",
  build="POST Webhook  →  Ack to Portal  →  Gmail (Send & Wait)  →  IF  →  Notify Approved / Declined",
  nodes="webhook, respondToWebhook, gmail (sendAndWait), if, gmail",
@@ -829,6 +828,15 @@ activity_block(dict(tag="ACT 8b",title="Activity 8b — Leave Application & Mana
    "After the Ack, add Gmail → Send and Wait for Response (Approval). Address it to the manager's email; include leave details (employee, type, dates, reason) in the body. Set approval type to Approve / Decline (double button).",
    "Add an IF node: condition $json.data.approved equals true. True branch → Gmail: send 'Leave Approved' email to the employee. False branch → Gmail: send 'Leave Declined' email. Save and keep Active."],
  test="Submit a leave application via index.html → Apply Leave tab. Check the manager inbox and click Approve. Confirm the employee receives an approval confirmation email."))
+activity_block(dict(tag="ACT 8b",title="Activity 8b — Dashboard Data (Leave Balance & History)",kicker=K6,
+ desc="Build a GET webhook that powers the HR portal's Dashboard tab — returning a staff member's leave balance and recent application history as JSON to the browser.",
+ build="GET Webhook  →  Code (build data)  →  Respond to Webhook",nodes="webhook, code, respondToWebhook",
+ img="labs/activity8-guardrails/Activity8 - Dashboard Data (Leave Balance & History).png",
+ cap="Webhook → Code → Respond JSON to the HR portal",
+ steps=["Add a Webhook node: set Method = GET, Path = hr-dashboard, Allowed Origins = *. Activate the workflow and copy the Production URL — paste it into the HR portal Settings tab.",
+   "Add a Code node (JavaScript). Read the ?email= query parameter from $json.query.email. Build and return a leave-data object with annual and medical leave balance plus a list of recent applications.",
+   "Add a Respond to Webhook node: set respondWith = JSON and responseBody = {{ $json }}. Save and keep the workflow Active."],
+ test="Open index.html → Dashboard tab. Enter your staff email and click Refresh. Your leave balance and recent history should load from the n8n webhook."))
 content("Guardrails",[
  "Pre-guardrail (Input) — an LLM classifies each message ALLOW or BLOCK before it reaches the agent.",
  "Block: prompt injection, jailbreaks, requests for another person's salary or private data.",
@@ -850,8 +858,125 @@ website_slide("Activity 8 — The HR Service Portal",IMG("labs/activity8-guardra
   "HR Assistant is the guarded AI chatbot — input & output guardrails (8c)."],kicker="ACT 8 · THE WEBSITE")
 brk("Lunch Break","1 hour",AMBER)
 
-# ---------- TOPIC 7: CAPSTONE ----------
-section("TOPIC 7","Mini Capstone Project","07","Design · Build · Present · Assess")
+# ---------- TOPIC 6: USE CASES OF AGENTIC AI ----------
+section("TOPIC 6","Use Cases of Agentic AI","06","Customer onboarding · Client communications · Human oversight")
+K7="TOPIC 6 · USE CASES"
+content("Agentic AI in the Workplace",[
+ "Real business processes are messy: rules live in binders, data is re-keyed, emails are forgotten.",
+ "An agentic workflow puts an AI agent at the decision point and deterministic nodes everywhere else.",
+ "Use case 1 — Retail banking customer onboarding (Marina Trust Bank).",
+ "Use case 2 — Client rapport assistant with human handover (Meridian Asset Management)."],kicker="FROM LABS TO WORK")
+tile_grid("The 4-Step Problem-Solving Framework",[
+ "Problem definition — state the problem so you can measure when it is solved.",
+ "Root cause analysis — ask 'why' until you reach something you can change.",
+ "Solution ideation — map every root cause to a countermeasure (deterministic or AI).",
+ "Build & validate — implement in n8n and prove each root cause is killed."],
+ kicker=K7,cols=2,size=14)
+two_col("Agent Decision vs Deterministic Step",[
+ ("Give to a deterministic node",0),("Trimming / normalising input (Set node)",1),
+ ("Computing age from date of birth (Set node)",1),("Appending the audit-log row (Sheets node)",1),
+ ("Fixed branding / email footer (template)",1)],
+ [("Give to the AI Agent",0),("Choosing APPROVE / REJECT / DUPLICATE / REVIEW",1),
+ ("Deciding when to call the lookup tool",1),("Writing the customer-facing email copy",1),
+ ("Reading a client's emotional tone",1)],
+ kicker=K7,lhead="Deterministic",rhead="Agent")
+activity_block(dict(tag="ACT 9",title="Activity 9 — Use Case: Retail Banking Onboarding Agent",kicker=K7,
+ desc="Marina Trust Bank onboards new customers manually — slow, error-prone, duplicate records. Build an AI Agent that takes an account application, checks duplicates by NRIC, screens KYC risk, applies eligibility rules, creates the customer record and emails the applicant.",
+ build="Form / Webhook → Normalise (Set) → AI Agent (+ 3 Sheets tools) → Log → Respond / Email",
+ nodes="formTrigger/webhook, set, agent, googleSheetsTool, gmail, respondToWebhook",
+ img="labs/activity9-banking-onboarding/website-version/Activity9-website.png",
+ cap="Marina Trust Bank — the public onboarding website that posts to the n8n webhook",
+ steps=["Create the 'Retail Banking Onboarding' Google Sheet: import customers.csv (existing customers) and onboarding-log.csv (audit log tabs).",
+   "Import the form-version workflow (LU1-Activity1-Retail-Banking-Onboarding.json) and re-select your Google Sheets, Gemini/OpenAI and Gmail credentials.",
+   "Review the agent's three tools: check_duplicate_customer (lookup by NRIC), create_customer_record, and the eligibility rules in the system message.",
+   "Run test applications from test-applications.csv — one clean approval, one duplicate NRIC, one under-age rejection, one PEP flagged for review.",
+   "Website version: import LU1-Activity1b-Onboarding-Webhook.json — the same agent behind a POST Webhook instead of a Form Trigger.",
+   "Set Allowed Origins (CORS) = *, Activate, copy the Production URL and paste it into the website's script.js / Settings.",
+   "Open index.html and submit a real application from the bank website."],
+ test="Submit a duplicate NRIC from the website — the agent returns DUPLICATE and no new record is created; the audit log gains a row either way."))
+activity_block(dict(tag="ACT 10",title="Activity 10 — Use Case: Client Rapport Assistant (Human Handover)",kicker=K7,
+ desc="Meridian Asset Management's clients write in when markets fall. An AI agent reads the concern and emotional tone and drafts a strictly non-advisory reply — but sends NOTHING until a licensed relationship manager clicks Approve. Automation with human oversight in a regulated industry.",
+ build="Chat Webhook → Normalise → Rapport AI Agent → Ack + Log Draft → RM Approval (Send & Wait) → IF → Send Reply / Assign to Human",
+ nodes="webhook, set, agent, structuredOutputParser, googleSheets, gmail (sendAndWait), if, respondToWebhook",
+ img="labs/activity10-client-rapport/Activity10-website.png",
+ cap="Meridian Asset Management — the client portal with the floating chat widget",
+ steps=["Create a Google Sheet 'Meridian Client Rapport' with three tabs — Drafts, Approved_Replies, Handover_Queue — importing the three provided CSV header files.",
+   "Import LU2-Activity2b-Client-Rapport-Assistant.json and re-select your Gemini/OpenAI, Google Sheets and Gmail credentials.",
+   "Review the agent's system message: classify the query, read the tone, draft a reply — never advice, never a market prediction.",
+   "Set Allowed Origins (CORS) = * on the Client Query Webhook; Activate and copy the Production URL into the website Settings.",
+   "Open index.html, send a worried-client message from the chat widget — the widget shows an acknowledgement, not the draft.",
+   "Check the RM inbox: the approval email shows the classification, flags and draft with Approve / Decline buttons.",
+   "Approve one draft (client gets the reply; Approved_Replies logs it) and decline another (it lands in Handover_Queue and a human agent is emailed)."],
+ test="The client only ever receives a reply AFTER the manager clicks Approve — verify Drafts, Approved_Replies and Handover_Queue each recorded their part."))
+content("End of Day 3 — Recap",[
+ "You paused automations for human approval and wrapped agents in guardrails.",
+ "You applied the full pattern to two real use cases — banking onboarding and client communications.",
+ "Tomorrow: voice agents with ElevenLabs and Vapi, then your mini capstone."],kicker="WRAP-UP")
+
+# ---------- TOPIC 7: VOICE AGENTS ----------
+section("TOPIC 7","Voice Agents","07","ElevenLabs · Vapi · Grounded voice")
+K8="TOPIC 7 · VOICE AGENTS"
+content("What is a Voice Agent?",[
+ "A voice agent listens (speech-to-text), reasons (LLM/agent), and speaks (text-to-speech) in real time.",
+ "The same agentic building blocks as before — tools, memory, grounding, guardrails — now over audio.",
+ "Voice raises the stakes: a caller can't scroll back, so grounding and fixed refusal wording matter more.",
+ "Two platforms this course uses: ElevenLabs Conversational AI and Vapi."],kicker="CONCEPT")
+two_col("Two Vendors, Two Architectures",[
+ ("ElevenLabs (Activity 11)",0),("ElevenLabs runs the model and the voice",1),
+ ("n8n mints a signed URL + serves the agent's tools",1),
+ ("Call path: browser → n8n → signed URL → WebSocket",1),
+ ("Browser never sees your xi-api-key",1)],
+ [("Vapi (Activity 12)",0),("Vapi does speech-to-text and the voice",1),
+ ("Your n8n workflow IS the brain (Custom LLM)",1),
+ ("Call path: browser → Vapi → your n8n webhook",1),
+ ("Browser gets only the Vapi PUBLIC key",1)],
+ kicker=K8,lhead="ElevenLabs",rhead="Vapi")
+content("Voice Agent Security Rules",[
+ "Signed URL — n8n asks ElevenLabs for a short-lived URL server-side; the API key never reaches the browser.",
+ "Public vs private key — a Vapi public key can only start calls; the private key never goes into a web page.",
+ "Tool webhooks are called by the VENDOR'S servers — they must reach your n8n over the public internet.",
+ "n8n Cloud workspaces are already public; self-hosted localhost needs a tunnel (e.g. ngrok http 5678)."],kicker=K8)
+activity_block(dict(tag="ACT 11",title="Activity 11 — Voice Booking Agent with ElevenLabs (GG Hair Salon)",kicker=K8,
+ desc="Nina is GG Hair Salon's voice receptionist: she answers by voice, quotes real prices from the salon handbook, checks a real Google Calendar for free slots, and books real appointments — all through n8n tool webhooks.",
+ build="Web page → n8n (signed URL) → ElevenLabs agent  +  tool webhooks: check_availability / book_appointment → Google Calendar",
+ nodes="webhook, httpRequest (signed URL), respondToWebhook, googleCalendarTool",
+ img="labs/activity11-voice-elevenlabs/screenshots/lab4-website-home.png",
+ cap="GG Hair Salon — the Book by Voice call to action",
+ steps=["Import BOTH flows — elevenlabs-web-call-flow.json and elevenlabs-booking-tools-flow.json — and set both Active.",
+   "On the Get Signed URL node, add a Header Auth credential 'ElevenLabs API': name = xi-api-key, value = your ElevenLabs key.",
+   "Connect YOUR OWN Google account on the two Google Calendar nodes.",
+   "In the ElevenLabs dashboard, create the agent (Nina) and upload knowledge-base/gg-hair-salon-handbook.pdf to her Knowledge Base.",
+   "Register the two tools in the agent with your n8n PUBLIC webhook URLs: .../webhook/check-availability and .../webhook/book-appointment.",
+   "Paste Nina's agent ID and your web-call webhook URL into the website's ⚙ Settings.",
+   "Serve the site (python3 -m http.server 8090 from the website folder), click Book by Voice, and book a Thursday 2 PM haircut end to end."],
+ test="Nina quotes handbook prices ($65 women's cut, 12-hour cancellation rule), offers an alternative for a taken slot, and the booking appears in YOUR Google Calendar — with a tool execution in n8n during the call."))
+website_slide("Activity 11 — Nothing is Hardcoded",IMG("labs/activity11-voice-elevenlabs/screenshots/lab4-webhook-settings.png"),
+ ["The page's ⚙ Settings takes your own web-call webhook URL and agent ID.",
+  "n8n exchanges your xi-api-key for a short-lived SIGNED URL server-side.",
+  "The browser opens a WebSocket to the signed URL and talks to Nina.",
+  "Your ElevenLabs API key never reaches the browser."],kicker="ACT 11 · SETTINGS")
+activity_block(dict(tag="ACT 12",title="Activity 12 — Grounded FAQ Voice Agent with Vapi (MediRefill)",kicker=K8,
+ desc="Ava is MediRefill pharmacy's refill assistant — and her brain is YOUR n8n workflow (Vapi Custom LLM). She answers only from six FAQ topics and hard-refuses all medical advice with fixed wording plus a pharmacist callback.",
+ build="Browser → Vapi (public key) → Vapi calls your n8n webhook as its model → AI Agent → OpenAI-shaped response",
+ nodes="webhook, agent, lmChatOpenAi, respondToWebhook",
+ img="labs/activity12-voice-vapi/screenshots/lab5-vapi-flow.png",
+ cap="The Vapi Custom-LLM flow — webhook → AI Agent → OpenAI-shaped response",
+ steps=["Import vapi-faq-flow.json and set it Active. Read ava-assistant-prompt.md — the safety guardrail lives in its fixed wording.",
+   "Re-select your OpenAI credential on the FAQ Agent's chat model.",
+   "Prove the webhook with curl BEFORE any audio: POST an OpenAI-shaped body to .../webhook/vapi-faq and read a real answer back.",
+   "In Vapi, create an assistant whose model is a Custom LLM pointing at that URL.",
+   "Serve the site (python3 -m http.server 8091 from the website folder) and paste your Vapi PUBLIC key + assistant ID into ⚙ Settings.",
+   "Run the three graded calls: 'When will my refill arrive?' · 'Can I take two instead of one?' · 'I'm having chest pains.'"],
+ test="Refill question → grounded answer (2–3 working days, free above $60). Medical question → the fixed refusal + pharmacist callback. Emergency → 995 / A&E escalation. Save the transcript — it is your evidence."))
+website_slide("Activity 12 — The MediRefill Website",IMG("labs/activity12-voice-vapi/screenshots/lab5-vapi-site.png"),
+ ["MediRefill — an online prescription-refill pharmacy with a voice assistant.",
+  "Built on the Vapi Web SDK; the page holds only the PUBLIC key.",
+  "Ava is grounded in six FAQ topics: delivery, refills, collection, payment.",
+  "Any dose / interaction / symptom question gets one fixed refusal sentence."],kicker="ACT 12 · THE WEBSITE")
+brk("Lunch Break","1 hour",AMBER)
+
+# ---------- TOPIC 8: CAPSTONE ----------
+section("TOPIC 8","Mini Capstone Project and Presentation","08","Design · Build · Present · Assess")
 content("Mini Capstone Project",[
  "In small groups, design and build an end-to-end automation using what you learned.",
  "Include: a trigger, an AI agent with a tool or RAG source, an external API or storage, and a guardrail / human-in-the-loop step.",
@@ -892,9 +1017,20 @@ rect(s,Inches(0.85),Inches(2.7),Inches(0.14),Inches(1.5),TEAL)
 txt(s,Inches(1.25),Inches(2.7),Inches(11),Inches(1.2),[[("Thank You!",48,INK,True)]])
 txt(s,Inches(1.27),Inches(4.1),Inches(11.5),Inches(1.4),
  [[("Keep your local n8n running and keep building your own agents.",18,GREY,False)],
-  [("Download all flows: github.com/tertiarycourses/TGS-2023035977-Agentic-AI-Automation-with-n8n",13,BLUE,True)],
+  [(f"Download all flows: {REPO_URL}",13,BLUE,True)],
   [("Powered by Tertiary Infotech Academy Pte Ltd  ·  www.tertiarycourses.com.sg",12,GREY,False)]],space=8)
 footer(s)
+
+# ---------- SLIDE TRANSITIONS (house rule: every slide gets a fade transition) ----------
+from pptx.oxml.ns import qn as _qn
+def add_transitions(prs,kind="fade",speed="med"):
+    for sl in prs.slides:
+        el=sl._element
+        for tr in el.findall(_qn('p:transition')): el.remove(tr)
+        tr=el.makeelement(_qn('p:transition'),{'spd':speed})
+        tr.append(el.makeelement(_qn(f'p:{kind}'),{}))
+        el.append(tr)
+add_transitions(prs)
 
 OUT=f"courseware/{TITLE}-{VERSION}.pptx"
 prs.save(f"{REPO}/{OUT}")

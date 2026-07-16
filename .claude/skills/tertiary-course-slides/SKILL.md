@@ -65,3 +65,23 @@ enable the Pages site, and skip any "deploy static site" phase for these repos. 
 repo homepage should point to the course page on www.tertiarycourses.com.sg instead.
 Lab web apps are run locally by learners (or demoed via localhost) — they don't need
 a hosted deployment.
+
+## Slide transitions — REQUIRED on every deck
+
+Every deck built with this skill MUST apply a slide transition effect to ALL slides
+(house default: **fade**, medium speed). python-pptx has no transition API, so inject
+the `p:transition` element into each slide's XML after building, before save:
+
+```python
+from pptx.oxml.ns import qn
+def add_transitions(prs, kind="fade", speed="med"):
+    for sl in prs.slides:
+        el = sl._element
+        for tr in el.findall(qn("p:transition")): el.remove(tr)
+        tr = el.makeelement(qn("p:transition"), {"spd": speed})
+        tr.append(el.makeelement(qn(f"p:{kind}"), {}))
+        el.append(tr)
+add_transitions(prs)   # call immediately before prs.save(...)
+```
+
+Keep the effect subtle and uniform (fade) — never mix effects across slides.

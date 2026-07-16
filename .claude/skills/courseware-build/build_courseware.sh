@@ -18,9 +18,10 @@ python3 "$SKILLS/tertiary-course-slides/make_slides.py"
 python3 "$SKILLS/tertiary-lesson-plan/make_lesson_plan.py"
 python3 "$SKILLS/tertiary-learner-guide/make_learner_guide.py"
 
-PPT="$(ls -t "$CW"/Agentic\ AI\ Automation\ with\ n8n-v*.pptx | head -1)"
-LP="$CW/LP-Agentic AI Automation with n8n.docx"
-LG="$CW/LG-Agentic AI Automation with n8n.docx"
+TITLE="No Code and Low Code Agentic AI Applications"
+PPT="$(ls -t "$CW/$TITLE"-v*.pptx | head -1)"
+LP="$CW/LP-$TITLE.docx"
+LG="$CW/LG-$TITLE.docx"
 
 echo "==> Render PDFs (pass 1)"
 "$SOFFICE" --headless --convert-to pdf --outdir "$CW" "$PPT"  >/dev/null 2>&1
@@ -28,8 +29,8 @@ echo "==> Render PDFs (pass 1)"
 "$SOFFICE" --headless --convert-to pdf --outdir "$CW" "$LG"   >/dev/null 2>&1
 
 echo "==> Inject page-numbered Table of Contents (LP + LG)"
-python3 "$CW/build/inject_toc.py" "$LP" "${LP%.docx}.pdf" 2
-python3 "$CW/build/inject_toc.py" "$LG" "${LG%.docx}.pdf" 2
+python3 "$SKILLS/courseware-build/inject_toc.py" "$LP" "${LP%.docx}.pdf" 2
+python3 "$SKILLS/courseware-build/inject_toc.py" "$LG" "${LG%.docx}.pdf" 2
 
 echo "==> Render PDFs (pass 2 — with built TOC)"
 "$SOFFICE" --headless --convert-to pdf --outdir "$CW" "$LP"   >/dev/null 2>&1

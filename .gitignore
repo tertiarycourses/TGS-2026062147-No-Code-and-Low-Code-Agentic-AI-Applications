@@ -39,3 +39,6 @@ __pycache__/
 # WSQ assessment materials (confidential — never pushed)
 /assessment/
 /assessment\ /
+
+# Superseded courseware versions (kept locally / on Drive only)
+/courseware/archive/
