@@ -45,3 +45,6 @@ __pycache__/
 
 # Lab distribution archives (rebuildable — never pushed to GitHub)
 *.zip
+
+# Course Proposal / SSG submission (internal regulatory doc — not courseware)
+/reference/

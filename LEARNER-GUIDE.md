@@ -1,12 +1,23 @@
 # No Code and Low Code Agentic AI Applications — Step-by-Step Learner Guide
 
-**Course Code:** TGS-2026062147  ·  **Version 1.0**  ·  Tertiary Infotech Academy Pte Ltd
+**Course Code:** TGS-2026062147  ·  **Version 1.1**  ·  Tertiary Infotech Academy Pte Ltd
 
 ### Document Version Control Record
 
 | Version | Effective Date | Summary of Changes | Author |
 | --- | --- | --- | --- |
 | 1.0 | 17 July 2026 | First version — 4-day Learner Guide for No Code and Low Code Agentic AI Applications (TGS-2026062147). Topics 1–4 (Fundamentals of n8n, AI Agents, Webhook and HTTP Request, RAG — Activities 1–7b) adapted from Agentic AI Automation with n8n; Topic 5 Human in the Loop and Guardrails (Activity 8); Topic 6 Use Cases of Agentic AI (Activity 9 retail banking onboarding, Activity 10 client rapport assistant with human handover); Topic 7 Voice Agents (Activity 11 ElevenLabs voice booking, Activity 12 Vapi grounded FAQ); Topic 8 Mini Capstone Project and Presentation | Tertiary Infotech Academy Pte Ltd |
+| 1.1 | 20 July 2026 | Restructured to 3 Learning Units (LU1–LU3) aligned to Course Proposal TSC ICT-BAS-0047-1.1; Learning Outcomes restated as LO1–LO3 with K/A mapping; Activity 5 rewritten for the in-page **Setup** menu (separate enquiry + chat webhooks and an admin email) | Tertiary Infotech Academy Pte Ltd |
+
+## Learning Outcomes
+
+By the end of this course you will be able to:
+
+- **LO1** (LU1 · Topics 1–2 · K2, K4 · A1, A2): Maintain proper configurations of no-code and low-code Agentic AI tools, and describe issues for appropriate escalation.
+- **LO2** (LU2 · Topics 3–4 · K3, K6 · A4, A5): Apply effective prompt engineering, model configuration and Retrieval Augmented Generation to integrate foundational models into low-code AI agent applications.
+- **LO3** (LU3 · Topics 5–8 · K5, K1 · A3): Troubleshoot performance issues in Agentic AI applications using standard debugging methods.
+
+*Aligned to TSC **ICT-BAS-0047-1.1** — Knowledge K1–K6 (assessed by the Written Assessment) and Abilities A1–A5 (assessed by the Practical Performance).*
 
 ## Table of Contents
 
