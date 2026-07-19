@@ -186,7 +186,7 @@ TGS-2026062147-No-Code-and-Low-Code-Agentic-AI-Applications/
 ## Getting Started
 
 ### Prerequisites
-- An [**n8n**](https://n8n.io) account (Cloud or self-hosted via [`labs/n8n-installation/`](labs/n8n-installation/))
+- An [**n8n**](https://n8n.io) account — sign up at [app.n8n.cloud/register](https://app.n8n.cloud/register) (email-first; 14-day free trial, no credit card) or self-host via [`labs/n8n-installation/`](labs/n8n-installation/)
 - An [**OpenAI API key**](https://platform.openai.com/api-keys) and/or a [**Google Gemini key**](https://aistudio.google.com/) (embeddings + chat)
 - A **Telegram bot token** (from [@BotFather](https://t.me/BotFather))
 - A **Gmail** account (emails + human-in-the-loop approvals) and a **Google account** (Sheets, Drive, Calendar)
