@@ -436,11 +436,122 @@ textarea:focus {
   text-align: right;
 }
 
+/* ---- Webhook setup bar (learner configuration) ---- */
+.webhook-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  background: var(--navy);
+  color: var(--white);
+  box-shadow: 0 -10px 30px rgba(11, 31, 58, 0.25);
+}
+
+.webhook-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px 16px;
+}
+
+.webhook-bar.collapsed .webhook-inner {
+  display: none;
+}
+
+.webhook-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.webhook-hint {
+  display: block;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+}
+
+.webhook-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.webhook-row input {
+  flex: 1 1 340px;
+  min-width: 0;
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88rem;
+}
+
+.webhook-row input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.webhook-row input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+.webhook-row .button {
+  padding: 11px 18px;
+  font-size: 0.88rem;
+}
+
+.webhook-row .button.secondary {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.webhook-status {
+  margin: 9px 0 0;
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.webhook-status.success {
+  color: #6ee7b7;
+}
+
+.webhook-status.error {
+  color: #fca5a5;
+}
+
+.webhook-status.pending {
+  color: var(--gold);
+}
+
+.webhook-toggle {
+  position: absolute;
+  top: -34px;
+  right: 20px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 10px 10px 0 0;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .chat-widget {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: 190px;
   z-index: 50;
+  transition: bottom 0.25s ease;
+}
+
+.webhook-bar.collapsed ~ .chat-widget {
+  bottom: 60px;
 }
 
 .chat-toggle {
@@ -625,8 +736,16 @@ textarea:focus {
 
   .chat-widget {
     right: 12px;
-    bottom: 12px;
+    bottom: 200px;
     left: 12px;
+  }
+
+  .webhook-bar.collapsed ~ .chat-widget {
+    bottom: 56px;
+  }
+
+  .webhook-row .button {
+    flex: 1 1 auto;
   }
 
   .chat-toggle {
@@ -636,4 +755,10 @@ textarea:focus {
   .chat-window {
     width: 100%;
   }
+}
+
+.chat-message.error {
+  background: #fff1f2;
+  color: #9f1239;
+  border: 1px solid #fecdd3;
 }

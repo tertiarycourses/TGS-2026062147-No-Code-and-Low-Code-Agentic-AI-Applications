@@ -6,7 +6,9 @@
         "httpMethod": "POST",
         "path": "vapi-faq",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,

@@ -1,13 +1,14 @@
 {
-  "name": "Activity 5 — Website Chatbot via Webhook (Investment Advisor)",
+  "name": "Activity 5 \u2014 Website Chatbot via Webhook (Investment Advisor)",
   "nodes": [
     {
       "parameters": {
-        "path": "12663502-ff47-45b6-9a8f-c67c083603d9",
+        "path": "investment-enquiry",
         "responseMode": "responseNode",
         "options": {
           "allowedOrigins": "*"
-        }
+        },
+        "httpMethod": "POST"
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -21,7 +22,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const q = $json.query || {};\nconst lead = {\n  type: q.type || 'enquiry',\n  name: q.name || '',\n  email: q.email || '',\n  phone: q.phone || '',\n  goal: q.goal || '',\n  message: q.message || '',\n  submittedAt: new Date().toISOString(),\n};\n\nlead.emailSubject = `New investment enquiry from ${lead.name || 'website visitor'}`;\nlead.emailMessage = [\n  'New investment advisory enquiry received from the website.',\n  '',\n  `Name: ${lead.name}`,\n  `Email: ${lead.email}`,\n  `Phone: ${lead.phone}`,\n  `Investment Goal: ${lead.goal}`,\n  '',\n  'Message:',\n  lead.message,\n].join('\\n');\n\nlead.success = true;\nlead.responseMessage = 'Thank you. Your enquiry has been received.';\nreturn [{ json: lead }];"
+        "jsCode": "const q = $json.body || $json.query || {};\nconst lead = {\n  type: q.type || 'enquiry',\n  name: q.name || '',\n  email: q.email || '',\n  phone: q.phone || '',\n  goal: q.goal || '',\n  message: q.message || '',\n  submittedAt: new Date().toISOString(),\n};\n\nlead.emailSubject = `New investment enquiry from ${lead.name || 'website visitor'}`;\nlead.emailMessage = [\n  'New investment advisory enquiry received from the website.',\n  '',\n  `Name: ${lead.name}`,\n  `Email: ${lead.email}`,\n  `Phone: ${lead.phone}`,\n  `Investment Goal: ${lead.goal}`,\n  '',\n  'Message:',\n  lead.message,\n].join('\\n');\n\nlead.success = true;\nlead.responseMessage = 'Thank you. Your enquiry has been received.';\nreturn [{ json: lead }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -86,7 +87,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "12663502-ff47-45b6-9a8f-c67c083603d9",
+        "path": "investment-chat",
         "responseMode": "responseNode",
         "options": {
           "allowedOrigins": "*"

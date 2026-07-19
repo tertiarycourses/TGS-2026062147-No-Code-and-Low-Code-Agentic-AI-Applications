@@ -23,7 +23,9 @@
         "httpMethod": "POST",
         "path": "8c0c6a15-3665-41f0-bb60-f94e11fac572",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,

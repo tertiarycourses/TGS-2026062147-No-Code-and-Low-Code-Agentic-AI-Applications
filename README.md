@@ -213,10 +213,12 @@ cd labs/activity9-banking-onboarding/website-version
 python3 -m http.server 8000
 # then open http://localhost:8000/index.html
 ```
-- Set the webhook / production URL in each page (gear icon or `script.js`).
+- Set the webhook / production URL in each page — most pages expose it in the UI (Activity 5 has a setup bar at the bottom of the page; others use a gear icon), so you don't have to edit `script.js`. The URL is remembered in your browser.
 - **Voice labs:** the vendor's servers must reach your n8n — use your n8n Cloud Production URLs, or expose a local n8n with `ngrok http 5678`.
 
-> ⚠️ **CORS:** each n8n Webhook node must have **Options → Allowed Origins (CORS) = `*`** so the browser page can call it. All workflow exports in this repo already include this.
+> ⚠️ **CORS:** each n8n Webhook node must have **Options → Allowed Origins (CORS) = `*`** so the browser page can call it. All 14 webhook nodes across the lab exports in this repo already include this — it matters most when you open a page directly from disk (`file://`), because the browser then sends `Origin: null` and a webhook without CORS silently rejects the call.
+
+> 💡 **Two webhooks may never share one path.** n8n refuses to register the second, and that branch silently never fires — a common cause of "my webhook doesn't work". Give each Webhook node its own path (e.g. Activity 5 uses `investment-enquiry` and `investment-chat`).
 
 For complete, click-by-click setup, see **[LEARNER-GUIDE.md](LEARNER-GUIDE.md)**.
 

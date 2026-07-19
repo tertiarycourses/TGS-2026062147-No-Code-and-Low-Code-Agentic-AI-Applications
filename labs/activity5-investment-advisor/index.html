@@ -170,14 +170,36 @@
         General information only. Speak with a licensed advisor before making
         investment decisions.
       </p>
-      <p class="powered-by">
-        Powered by
-        <a href="https://www.tertiaryinfotech.com/" target="_blank" rel="noopener">
-          Tertiary Infotech Academy Pte Ltd.
-        </a>
-      </p>
       <p class="powered-by">Powered by <a href="https://www.tertiaryinfotech.com/" target="_blank" rel="noopener">Tertiary Infotech Academy Pte Ltd</a></p>
-</footer>
+    </footer>
+
+    <!-- Learner setup: paste the n8n Production webhook URL here (saved in this browser). -->
+    <section class="webhook-bar" id="webhookBar" aria-label="Webhook configuration">
+      <div class="webhook-inner">
+        <label for="webhookUrl">
+          <span class="webhook-label">n8n Webhook URL</span>
+          <span class="webhook-hint">
+            Paste the <strong>Production URL</strong> from your n8n Webhook node
+          </span>
+        </label>
+        <div class="webhook-row">
+          <input
+            id="webhookUrl"
+            type="url"
+            inputmode="url"
+            spellcheck="false"
+            placeholder="https://your-n8n-host/webhook/investment-advisor"
+          />
+          <button class="button primary" id="webhookSave" type="button">Save</button>
+          <button class="button secondary" id="webhookTest" type="button">Test</button>
+          <button class="button secondary" id="webhookClear" type="button">Clear</button>
+        </div>
+        <p class="webhook-status" id="webhookStatus" role="status" aria-live="polite"></p>
+      </div>
+      <button class="webhook-toggle" id="webhookToggle" type="button" aria-expanded="true">
+        Hide setup
+      </button>
+    </section>
 
     <section class="chat-widget" aria-label="Investment advisor chatbot">
       <button class="chat-toggle" id="chatToggle" aria-expanded="false" aria-controls="chatWindow">
