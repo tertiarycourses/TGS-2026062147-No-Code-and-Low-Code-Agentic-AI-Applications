@@ -341,18 +341,23 @@ Expose an AI agent to a **public website** using a **Webhook**. The provided one
 2. Note the workflow has **two Webhook triggers on two different paths** — `investment-enquiry` (emails the advisor) and `investment-chat` (the AI agent). Both are **POST** with **Allowed Origins (CORS)** set to `*`. Two webhooks may **not** share one path; n8n will refuse to register the second and that branch silently never fires.
 3. Re-select your **OpenAI** and **Gmail** credentials on the AI Agent and Email nodes.
 4. Review the agent's compliance system instruction (no guaranteed returns, no personalised advice).
-5. **Save**, toggle **Active**, and copy the **Production URL** from *either* webhook node (not the Test URL — that only works for one click after you press *Listen for test event*).
+5. **Save**, toggle **Active**, then copy the **Production URL** from *each* webhook node — one for `investment-enquiry` and one for `investment-chat` (not the Test URL — that only works for one click after you press *Listen for test event*).
 6. **Open `index.html`** by double-clicking it. No web server is needed — the page runs straight from your file system.
-7. In the dark **setup bar** at the bottom of the page, paste that Production URL, click **Save**, then click **Test**. You should see *"Success — n8n responded with 200."* The URL is remembered in your browser, so you only do this once. (No need to edit `script.js`.)
+7. Click **⚙ Setup** in the top-right menu and fill in the three fields:
+   - **Enquiry form webhook** — the `investment-enquiry` Production URL
+   - **Chatbot webhook** — the `investment-chat` Production URL
+   - **Admin email** — the inbox that should receive enquiries
+8. Click **Test** beside each webhook — you should see *"Success — n8n responded with 200."* — then **Save settings**. The dot on the Setup button turns green when all three are set, and the values are remembered in your browser. (No need to edit `script.js`.)
 
-> 💡 You only paste **one** URL. The page swaps the last path segment automatically, so pasting either `.../webhook/investment-enquiry` or `.../webhook/investment-chat` wires up **both** the form and the chatbot.
+> 💡 **The admin email is what the enquiry is sent to.** The workflow's `Format Enquiry` node reads it from the request as `adminEmail`, and `Email Advisor` sends there — *not* to the visitor's own address. If you would rather hard-code it in n8n, set `ADVISOR_FALLBACK` at the top of the `Format Enquiry` node instead.
 
-> ⚠️ **If the Test button fails**, the message tells you which of the three usual causes it is:
-> - *"Could not reach the webhook"* → **CORS**. In the Webhook node set **Allowed Origins (CORS)** to `*`, then **Save** and re-activate the workflow. This is by far the most common cause when opening the page as a file.
-> - *"404 — n8n did not recognise this webhook"* → the workflow is not **Active**, or you pasted the **Test** URL.
-> - *"No webhook URL set"* → nothing saved in the setup bar yet.
+> ⚠️ **If a Test button fails**, the message names the cause:
+> - *"Could not reach it"* → **CORS**. In the Webhook node set **Allowed Origins (CORS)** to `*`, then **Save** and re-activate. This is by far the most common cause when opening the page as a file.
+> - *"404 — not recognised"* → the workflow is not **Active**, or you pasted the **Test** URL.
+> - *"500 — the workflow ran but errored"* → usually a missing **Admin email**, or a credential that needs re-selecting.
+> - *"No … webhook set"* → that field is still empty in Setup.
 >
-> Both the enquiry form and the chatbot send a **POST** with a JSON body, so set the Webhook node's **HTTP Method** to **POST**. The `type` field (`enquiry` or `chat`) is what the Switch/If node routes on.
+> Both webhooks are **POST** with a JSON body. Testing each one separately tells you exactly which half is misconfigured, instead of guessing.
 
 ![The Investment Advisor website — enquiry form + floating 'Ask Advisor' chatbot, both posting to one n8n webhook](labs/activity5-investment-advisor/Activity5-website.png)
 

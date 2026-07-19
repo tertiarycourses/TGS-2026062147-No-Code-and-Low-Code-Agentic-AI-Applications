@@ -1,68 +1,51 @@
 /*
- * Webhook configuration.
+ * Connection settings.
  *
- * You do NOT need to edit this file. Paste your n8n Production webhook URL
- * into the dark setup bar at the bottom of the page and click Save — it is
- * stored in this browser (localStorage) and survives a page reload.
+ * You do NOT need to edit this file. Click "Setup" in the top-right menu and
+ * enter your two n8n Production webhook URLs plus the admin email. The values
+ * are stored in this browser (localStorage) and survive a page reload.
  *
- * Optionally pre-fill it here so the page ships ready-to-run:
+ * Optionally pre-fill them here so the page ships ready-to-run:
  */
-const DEFAULT_WEBHOOK_URL = "";
+const DEFAULTS = {
+  enquiryWebhook: "",
+  chatWebhook: "",
+  adminEmail: "",
+};
 
-const WEBHOOK_STORAGE_KEY = "investmentAdvisor.webhookUrl";
+const STORAGE_KEY = "investmentAdvisor.settings";
 
-function readStoredWebhook() {
+function readSettings() {
   try {
-    return window.localStorage.getItem(WEBHOOK_STORAGE_KEY) || "";
-  } catch (error) {
-    // localStorage is unavailable on some file:// / private-mode setups.
-    return "";
-  }
-}
-
-function writeStoredWebhook(url) {
-  try {
-    if (url) {
-      window.localStorage.setItem(WEBHOOK_STORAGE_KEY, url);
-    } else {
-      window.localStorage.removeItem(WEBHOOK_STORAGE_KEY);
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      return { ...DEFAULTS, ...JSON.parse(raw) };
     }
   } catch (error) {
-    /* Non-fatal: the URL still works for this page session. */
+    // localStorage may be unavailable on file:// or in private mode.
+  }
+  return { ...DEFAULTS };
+}
+
+function writeSettings(values) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
+  } catch (error) {
+    /* Non-fatal: settings still apply for this page session. */
   }
 }
 
-let webhookUrl = readStoredWebhook() || DEFAULT_WEBHOOK_URL;
+const settings = readSettings();
 
-/*
- * The workflow has TWO webhook triggers on separate paths:
- *   .../webhook/investment-enquiry  -> emails the advisor
- *   .../webhook/investment-chat     -> the AI agent
- * The learner pastes EITHER one; we swap the last path segment to reach the
- * other, so there is only ever one field to fill in.
- */
-function webhookFor(kind) {
-  if (!webhookUrl) {
+function requireWebhook(kind) {
+  const url = kind === "enquiry" ? settings.enquiryWebhook : settings.chatWebhook;
+  if (!url) {
+    const which = kind === "enquiry" ? "Enquiry form" : "Chatbot";
     throw new Error(
-      "No webhook URL set. Open the setup bar at the bottom of the page and paste your n8n Production URL."
+      `No ${which} webhook set. Click Setup in the top-right menu and paste your n8n Production URL.`
     );
   }
-
-  const wanted = kind === "enquiry" ? "investment-enquiry" : "investment-chat";
-
-  try {
-    const url = new URL(webhookUrl);
-    const segments = url.pathname.split("/").filter(Boolean);
-    if (segments.length) {
-      segments[segments.length - 1] = wanted;
-      url.pathname = `/${segments.join("/")}`;
-      return url.toString();
-    }
-  } catch (error) {
-    /* Fall through and use the URL exactly as pasted. */
-  }
-
-  return webhookUrl;
+  return url;
 }
 
 const enquiryForm = document.querySelector("#enquiryForm");
@@ -88,12 +71,16 @@ let chatStep = "name";
 function describeWebhookError(error) {
   const message = String((error && error.message) || error);
 
-  if (message.startsWith("No webhook URL set")) {
+  if (message.startsWith("No ")) {
     return message;
   }
 
   if (message.includes("404")) {
     return "404 — n8n did not recognise this webhook. Check the workflow is Active and that you used the Production URL, not the Test URL.";
+  }
+
+  if (message.includes("500")) {
+    return "500 — the workflow ran but errored. Check the n8n execution log; the usual cause is a missing Admin email in Setup, or a credential that needs re-selecting.";
   }
 
   if (message.includes("Webhook returned")) {
@@ -124,7 +111,7 @@ enquiryForm.addEventListener("submit", async (event) => {
   setFormStatus("", "");
 
   try {
-    const url = webhookFor("enquiry");
+    const url = requireWebhook("enquiry");
 
     // Sent as a POST with a JSON body so the enquiry form and the chatbot use
     // the SAME webhook method. A Webhook node set to POST would 404 a GET.
@@ -135,7 +122,10 @@ enquiryForm.addEventListener("submit", async (event) => {
         Accept: "application/json",
         "ngrok-skip-browser-warning": "true",
       },
-      body: JSON.stringify(Object.fromEntries(params)),
+      body: JSON.stringify({
+        ...Object.fromEntries(params),
+        adminEmail: settings.adminEmail,
+      }),
     });
 
     if (!response.ok) {
@@ -269,7 +259,7 @@ chatForm.addEventListener("submit", async (event) => {
   const loadingMessage = appendMessage("Thinking...", "bot", "loading");
 
   try {
-    const response = await fetch(webhookFor("chat"), {
+    const response = await fetch(requireWebhook("chat"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -303,19 +293,30 @@ chatForm.addEventListener("submit", async (event) => {
   }
 });
 
-/* ---- Webhook setup bar ---- */
+/* ---- Setup menu (top-right) ---- */
 
-const webhookBar = document.querySelector("#webhookBar");
-const webhookInput = document.querySelector("#webhookUrl");
-const webhookSave = document.querySelector("#webhookSave");
-const webhookTest = document.querySelector("#webhookTest");
-const webhookClear = document.querySelector("#webhookClear");
-const webhookStatus = document.querySelector("#webhookStatus");
-const webhookToggle = document.querySelector("#webhookToggle");
+const setupMenu = document.querySelector(".setup-menu");
+const setupToggle = document.querySelector("#setupToggle");
+const setupPanel = document.querySelector("#setupPanel");
+const setupClose = document.querySelector("#setupClose");
+const setupSave = document.querySelector("#setupSave");
+const setupClear = document.querySelector("#setupClear");
+const setupBadge = document.querySelector("#setupBadge");
 
-function setWebhookStatus(message, type) {
-  webhookStatus.textContent = message;
-  webhookStatus.className = `webhook-status ${type || ""}`.trim();
+const enquiryInput = document.querySelector("#enquiryWebhook");
+const chatWebhookInput = document.querySelector("#chatWebhook");
+const adminEmailInput = document.querySelector("#adminEmail");
+
+const enquiryStatus = document.querySelector("#enquiryStatus");
+const chatStatusEl = document.querySelector("#chatStatus");
+const adminStatus = document.querySelector("#adminStatus");
+
+const testEnquiry = document.querySelector("#testEnquiry");
+const testChat = document.querySelector("#testChat");
+
+function setStatus(el, message, type) {
+  el.textContent = message;
+  el.className = `setup-status ${type || ""}`.trim();
 }
 
 function looksLikeUrl(value) {
@@ -327,103 +328,204 @@ function looksLikeUrl(value) {
   }
 }
 
-function applyWebhookUrl(value, { persist } = { persist: true }) {
-  const trimmed = value.trim().replace(/\s+/g, "");
-
-  if (!trimmed) {
-    webhookUrl = "";
-    if (persist) writeStoredWebhook("");
-    setWebhookStatus("Webhook URL cleared.", "");
-    return false;
-  }
-
-  if (!looksLikeUrl(trimmed)) {
-    setWebhookStatus("That does not look like a URL. It should start with http:// or https://", "error");
-    return false;
-  }
-
-  webhookUrl = trimmed;
-  webhookInput.value = trimmed;
-  if (persist) writeStoredWebhook(trimmed);
-  setWebhookStatus("Webhook URL saved. The form and chatbot will now use it.", "success");
-  return true;
+/* Red dot until both webhooks and the admin email are in place. */
+function refreshBadge() {
+  const ready =
+    Boolean(settings.enquiryWebhook) &&
+    Boolean(settings.chatWebhook) &&
+    Boolean(settings.adminEmail);
+  setupBadge.hidden = false;
+  setupBadge.className = `setup-badge ${ready ? "ready" : ""}`.trim();
+  setupBadge.title = ready ? "Setup complete" : "Setup incomplete";
 }
 
-webhookSave.addEventListener("click", () => applyWebhookUrl(webhookInput.value));
+function applySettings() {
+  const enquiry = enquiryInput.value.trim().replace(/\s+/g, "");
+  const chat = chatWebhookInput.value.trim().replace(/\s+/g, "");
+  const admin = adminEmailInput.value.trim();
+  let ok = true;
 
-webhookInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    applyWebhookUrl(webhookInput.value);
+  if (enquiry && !looksLikeUrl(enquiry)) {
+    setStatus(enquiryStatus, "Must start with http:// or https://", "error");
+    ok = false;
+  } else {
+    settings.enquiryWebhook = enquiry;
+    setStatus(enquiryStatus, enquiry ? "Saved." : "", enquiry ? "success" : "");
   }
-});
 
-webhookClear.addEventListener("click", () => {
-  webhookInput.value = "";
-  applyWebhookUrl("");
-});
+  if (chat && !looksLikeUrl(chat)) {
+    setStatus(chatStatusEl, "Must start with http:// or https://", "error");
+    ok = false;
+  } else {
+    settings.chatWebhook = chat;
+    setStatus(chatStatusEl, chat ? "Saved." : "", chat ? "success" : "");
+  }
 
-webhookTest.addEventListener("click", async () => {
-  if (!applyWebhookUrl(webhookInput.value)) {
+  if (admin && !isValidEmail(admin)) {
+    setStatus(adminStatus, "Enter a valid email address.", "error");
+    ok = false;
+  } else {
+    settings.adminEmail = admin;
+    setStatus(
+      adminStatus,
+      admin ? "Enquiries will be emailed here." : "",
+      admin ? "success" : ""
+    );
+  }
+
+  if (ok) {
+    writeSettings(settings);
+  }
+  refreshBadge();
+  return ok;
+}
+
+/*
+ * Send a harmless probe so learners can verify each webhook independently
+ * before using the real form or chat.
+ */
+async function testWebhook(kind, url, statusEl, button) {
+  if (!url) {
+    setStatus(statusEl, "Enter the webhook URL first.", "error");
+    return;
+  }
+  if (!looksLikeUrl(url)) {
+    setStatus(statusEl, "Must start with http:// or https://", "error");
     return;
   }
 
-  webhookTest.disabled = true;
-  setWebhookStatus("Testing webhook...", "pending");
+  button.disabled = true;
+  setStatus(statusEl, "Testing...", "pending");
+
+  const payload =
+    kind === "enquiry"
+      ? {
+          type: "enquiry",
+          name: "Connection Test",
+          email: "test@example.com",
+          phone: "",
+          goal: "Connection test",
+          message: "Connection test from the Investment Advisor website.",
+          adminEmail: settings.adminEmail || adminEmailInput.value.trim(),
+          test: true,
+        }
+      : {
+          type: "chat",
+          message: "Connection test from the Investment Advisor website.",
+          name: "Connection Test",
+          phone: "",
+          email: "",
+          source: "webhook-test",
+          test: true,
+        };
 
   try {
-    const response = await fetch(webhookFor("chat"), {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         "ngrok-skip-browser-warning": "true",
       },
-      body: JSON.stringify({
-        type: "chat",
-        message: "Connection test from the Investment Advisor website.",
-        name: "Test",
-        phone: "",
-        email: "",
-        source: "webhook-test",
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
-      setWebhookStatus(
-        `Success — n8n responded with ${response.status}. Your webhook is live.`,
-        "success"
-      );
+      setStatus(statusEl, `Success — n8n responded with ${response.status}.`, "success");
     } else if (response.status === 404) {
-      setWebhookStatus(
-        "404 — n8n did not recognise this URL. Check the workflow is Active and that you copied the Production URL (not the Test URL).",
+      setStatus(
+        statusEl,
+        "404 — not recognised. Check the workflow is Active and that this is the Production URL.",
+        "error"
+      );
+    } else if (response.status === 500) {
+      setStatus(
+        statusEl,
+        "500 — the workflow ran but errored. Check the n8n execution log (often a missing admin email or credential).",
         "error"
       );
     } else {
-      setWebhookStatus(`n8n responded with ${response.status}.`, "error");
+      setStatus(statusEl, `n8n responded with ${response.status}.`, "error");
     }
   } catch (error) {
-    setWebhookStatus(
-      "Could not reach the webhook. Most often this is CORS — in the n8n Webhook node set Allowed Origins (CORS) to *, then Save and re-activate.",
+    setStatus(
+      statusEl,
+      "Could not reach it. Usually CORS — set Allowed Origins (CORS) to * in the Webhook node, then re-activate.",
       "error"
     );
   } finally {
-    webhookTest.disabled = false;
+    button.disabled = false;
+  }
+}
+
+function openSetup() {
+  setupPanel.hidden = false;
+  setupToggle.setAttribute("aria-expanded", "true");
+  window.setTimeout(() => enquiryInput.focus(), 60);
+}
+
+function closeSetup() {
+  setupPanel.hidden = true;
+  setupToggle.setAttribute("aria-expanded", "false");
+}
+
+setupToggle.addEventListener("click", () => {
+  if (setupPanel.hidden) {
+    openSetup();
+  } else {
+    closeSetup();
   }
 });
 
-webhookToggle.addEventListener("click", () => {
-  const collapsed = webhookBar.classList.toggle("collapsed");
-  webhookToggle.textContent = collapsed ? "Webhook setup" : "Hide setup";
-  webhookToggle.setAttribute("aria-expanded", String(!collapsed));
+setupClose.addEventListener("click", closeSetup);
+
+setupSave.addEventListener("click", () => {
+  if (applySettings()) {
+    setupSave.textContent = "Saved";
+    window.setTimeout(() => {
+      setupSave.textContent = "Save settings";
+    }, 1400);
+  }
 });
 
-if (webhookUrl) {
-  webhookInput.value = webhookUrl;
-  setWebhookStatus("Using the saved webhook URL. Click Test to verify it.", "");
-  webhookBar.classList.add("collapsed");
-  webhookToggle.textContent = "Webhook setup";
-  webhookToggle.setAttribute("aria-expanded", "false");
-} else {
-  setWebhookStatus("Paste your n8n Production webhook URL to activate the form and chatbot.", "");
+setupClear.addEventListener("click", () => {
+  enquiryInput.value = "";
+  chatWebhookInput.value = "";
+  adminEmailInput.value = "";
+  settings.enquiryWebhook = "";
+  settings.chatWebhook = "";
+  settings.adminEmail = "";
+  writeSettings(settings);
+  [enquiryStatus, chatStatusEl, adminStatus].forEach((el) => setStatus(el, "", ""));
+  refreshBadge();
+});
+
+testEnquiry.addEventListener("click", () =>
+  testWebhook("enquiry", enquiryInput.value.trim(), enquiryStatus, testEnquiry)
+);
+
+testChat.addEventListener("click", () =>
+  testWebhook("chat", chatWebhookInput.value.trim(), chatStatusEl, testChat)
+);
+
+// Close when clicking outside the menu or pressing Escape.
+document.addEventListener("click", (event) => {
+  if (!setupPanel.hidden && !setupMenu.contains(event.target)) {
+    closeSetup();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !setupPanel.hidden) {
+    closeSetup();
+  }
+});
+
+enquiryInput.value = settings.enquiryWebhook;
+chatWebhookInput.value = settings.chatWebhook;
+adminEmailInput.value = settings.adminEmail;
+refreshBadge();
+
+if (!settings.enquiryWebhook || !settings.chatWebhook || !settings.adminEmail) {
+  openSetup();
 }

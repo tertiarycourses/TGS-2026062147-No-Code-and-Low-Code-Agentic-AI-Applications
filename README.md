@@ -39,7 +39,7 @@
 **Activity 4 — Telegram AI Agent** · Telegram-triggered AI agent with memory (4a) + a Data Table tool for HR lookups (4b).
 ![Activity 4](labs/activity4-telegram-agent/Activity4a-Telegram-Agent.png)
 
-**Activity 5 — Website Chatbot via Webhook (Investment Advisor)** · A public landing page with an enquiry form and a floating AI chatbot, both wired to one n8n webhook.
+**Activity 5 — Website Chatbot via Webhook (Investment Advisor)** · A public landing page with an enquiry form and a floating AI chatbot, each wired to its own n8n webhook. Enquiries are emailed to an admin inbox; the chat is answered by an AI agent. Both are configured from a **⚙ Setup** menu on the page — no code editing.
 ![Activity 5](labs/activity5-investment-advisor/Activity5-website.png)
 
 **Activity 6 — Finance API → Telegram (AI Day Trader)** · Pulls Twelve Data candles + NewsAPI headlines, then replies with a Buy/Sell/Hold call. A live dashboard shows the chart and quote stats.
@@ -213,7 +213,7 @@ cd labs/activity9-banking-onboarding/website-version
 python3 -m http.server 8000
 # then open http://localhost:8000/index.html
 ```
-- Set the webhook / production URL in each page — most pages expose it in the UI (Activity 5 has a setup bar at the bottom of the page; others use a gear icon), so you don't have to edit `script.js`. The URL is remembered in your browser.
+- Set the webhook / production URL in each page — most pages expose it in the UI (Activity 5 has a **⚙ Setup** menu in the top-right with separate fields for the enquiry webhook, the chat webhook and the admin email, each with its own Test button; others use a gear icon), so you don't have to edit `script.js`. The values are remembered in your browser.
 - **Voice labs:** the vendor's servers must reach your n8n — use your n8n Cloud Production URLs, or expose a local n8n with `ngrok http 5678`.
 
 > ⚠️ **CORS:** each n8n Webhook node must have **Options → Allowed Origins (CORS) = `*`** so the browser page can call it. All 14 webhook nodes across the lab exports in this repo already include this — it matters most when you open a page directly from disk (`file://`), because the browser then sends `Origin: null` and a webhook without CORS silently rejects the call.
